@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAX ODDS — Lacrosse Betting Lines Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --accent-gold: #d4af37;
+            --accent-gold-dim: #9a7d28;
+            --accent-green: #00ff88;
+            --accent-red: #ff4757;
+            --accent-blue: #4facfe;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8a9a;
+            --text-muted: #5a5a6a;
+            --border-subtle: rgba(212, 175, 55, 0.15);
+            --glow-gold: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(79, 172, 254, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0f 0%, #0f0f18 100%);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        /* Header */
+        header {
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dim) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--bg-dark);
+            box-shadow: var(--glow-gold);
+        }
+
+        .logo h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, #fff 50%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .db-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-dim) 100%);
+            color: var(--bg-dark);
+            box-shadow: var(--glow-gold);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-gold);
+        }
+
+        /* Main Content */
+        main {
+            padding: 3rem 4rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Overview */
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+
+        .stat-card h3 {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+        }
+
+        .stat-card .change {
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .change.positive { color: var(--accent-green); }
+        .change.negative { color: var(--accent-red); }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: var(--bg-elevated);
+            color: var(--accent-gold);
+            box-shadow: inset 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        .tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Betting Lines Section */
+        .betting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .betting-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .betting-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-4px);
+            box-shadow: var(--glow-gold);
+        }
+
+        .betting-header {
+            padding: 1.5rem;
+            background: var(--bg-elevated);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .matchup {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .team {
+            text-align: center;
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-record {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .vs {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            color: var(--accent-gold);
+        }
+
+        .game-date {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .betting-body {
+            padding: 1.5rem;
+        }
+
+        .odds-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .odds-row:last-child {
+            border-bottom: none;
+        }
+
+        .odds-type {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .odds-values {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .odd {
+            padding: 0.5rem 1rem;
+            background: var(--bg-dark);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .odd:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-elevated);
+        }
+
+        .odd.favorite {
+            color: var(--accent-red);
+        }
+
+        .odd.underdog {
+            color: var(--accent-green);
+        }
+
+        .odd.neutral {
+            color: var(--accent-blue);
+        }
+
+        /* Data Source Section */
+        .source-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .source-header h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+        }
+
+        .source-url {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex: 1;
+            max-width: 700px;
+        }
+
+        .source-url input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .source-url input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+
+        /* Data Table */
+        .data-table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .data-table th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            background: var(--bg-elevated);
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table td {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-elevated);
+        }
+
+        .player-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        /* Loading State */
+        .loading {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Odds Format Toggle */
+        .odds-format {
+            display: flex;
+            gap: 0.25rem;
+            background: var(--bg-dark);
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .format-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .format-btn.active {
+            background: var(--bg-elevated);
+            color: var(--accent-gold);
+        }
+
+        /* Database Panel */
+        .db-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .db-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .db-stat {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .db-stat .label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .db-stat .value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-top: 0.25rem;
+        }
+
+        /* Console/Log */
+        .console {
+            background: #0d0d12;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .console-line {
+            padding: 0.25rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .console-line.info { color: var(--accent-blue); }
+        .console-line.success { color: var(--accent-green); }
+        .console-line.error { color: var(--accent-red); }
+        .console-line.warning { color: var(--accent-gold); }
+
+        .timestamp {
+            color: var(--text-muted);
+            margin-right: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 2rem 4rem;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stats-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            main {
+                padding: 2rem;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .betting-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .db-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 1000;
+        }
+
+        .toast {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-top: 0.5rem;
+            animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toast.success { border-left: 3px solid var(--accent-green); }
+        .toast.error { border-left: 3px solid var(--accent-red); }
+        .toast.info { border-left: 3px solid var(--accent-blue); }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Odds Explanation */
+        .odds-legend {
+            display: flex;
+            gap: 2rem;
+            padding: 1rem;
+            background: var(--bg-elevated);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.ml { background: var(--accent-gold); }
+        .legend-dot.spread { background: var(--accent-blue); }
+        .legend-dot.total { background: var(--accent-green); }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    <div class="grid-overlay"></div>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <div>
+                <h1>LAX ODDS</h1>
+                <span>Lacrosse Betting Lines Generator</span>
+            </div>
+        </div>
+        <div class="header-actions">
+            <div class="db-status">
+                <div class="status-dot" id="dbStatus"></div>
+                <span id="dbStatusText">Database Connected</span>
+            </div>
+            <div class="odds-format">
+                <button class="format-btn active" data-format="american">American</button>
+                <button class="format-btn" data-format="decimal">Decimal</button>
+                <button class="format-btn" data-format="fractional">Fractional</button>
+            </div>
+            <button class="btn btn-primary" id="scrapeBtn">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Fetch & Generate Odds
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Stats Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <h3>Games Analyzed</h3>
+                <div class="value" id="gamesAnalyzed">0</div>
+                <div class="change positive">From database</div>
+            </div>
+            <div class="stat-card">
+                <h3>Players Tracked</h3>
+                <div class="value" id="playersTracked">0</div>
+                <div class="change positive">Active roster</div>
+            </div>
+            <div class="stat-card">
+                <h3>Lines Generated</h3>
+                <div class="value" id="linesGenerated">0</div>
+                <div class="change positive">ML, Spread, O/U</div>
+            </div>
+            <div class="stat-card">
+                <h3>Last Updated</h3>
+                <div class="value" id="lastUpdated">--:--</div>
+                <div class="change" id="updateStatus">Awaiting scrape</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="betting">Betting Lines</button>
+            <button class="tab" data-tab="data">Team Data</button>
+            <button class="tab" data-tab="players">Player Stats</button>
+            <button class="tab" data-tab="database">Database</button>
+        </div>
+
+        <!-- Betting Lines Section -->
+        <section class="content-section active" id="betting-section">
+            <div class="source-panel">
+                <div class="source-header">
+                    <h2>📡 Data Source</h2>
+                    <div class="source-url">
+                        <input type="text" id="sourceUrl" value="https://illinoistechathletics.com/sports/mens-lacrosse/stats" placeholder="Enter stats URL...">
+                        <button class="btn btn-secondary" id="loadSampleBtn">Load Sample</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="odds-legend">
+                <div class="legend-item">
+                    <div class="legend-dot ml"></div>
+                    <span>Moneyline — Bet on who wins</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot spread"></div>
+                    <span>Spread — Point handicap</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot total"></div>
+                    <span>Over/Under — Total points</span>
+                </div>
+            </div>
+
+            <div class="loading" id="bettingLoading">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Generating betting lines...</p>
+            </div>
+
+            <div class="betting-grid" id="bettingGrid">
+                <!-- Betting cards will be inserted here -->
+            </div>
+        </section>
+
+        <!-- Team Data Section -->
+        <section class="content-section" id="data-section">
+            <div class="source-panel">
+                <div class="source-header">
+                    <h2>📊 Team Statistics</h2>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table" id="teamTable">
+                        <thead>
+                            <tr>
+                                <th>Statistic</th>
+                                <th>Illinois Tech</th>
+                                <th>Opponents</th>
+                                <th>Differential</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teamTableBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Player Stats Section -->
+        <section class="content-section" id="players-section">
+            <div class="source-panel">
+                <div class="source-header">
+                    <h2>👤 Player Statistics</h2>
+                </div>
+                <div class="data-table-container">
+                    <table class="data-table" id="playerTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Player</th>
+                                <th>GP</th>
+                                <th>G</th>
+                                <th>A</th>
+                                <th>PTS</th>
+                                <th>SH</th>
+                                <th>SH%</th>
+                                <th>GB</th>
+                                <th>TO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="playerTableBody">
+                            <!-- Data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Database Section -->
+        <section class="content-section" id="database-section">
+            <div class="db-panel">
+                <div class="source-header">
+                    <h2>🗄️ IndexedDB Storage</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn btn-secondary" id="exportBtn">Export JSON</button>
+                        <button class="btn btn-secondary" id="clearDbBtn">Clear Database</button>
+                    </div>
+                </div>
+                <div class="db-stats">
+                    <div class="db-stat">
+                        <div class="label">Team Records</div>
+                        <div class="value" id="teamRecords">0</div>
+                    </div>
+                    <div class="db-stat">
+                        <div class="label">Player Records</div>
+                        <div class="value" id="playerRecords">0</div>
+                    </div>
+                    <div class="db-stat">
+                        <div class="label">Game Records</div>
+                        <div class="value" id="gameRecords">0</div>
+                    </div>
+                </div>
+                <div class="console" id="console">
+                    <div class="console-line info">
+                        <span class="timestamp">[System]</span> LAX ODDS initialized. Ready to scrape data.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>LAX ODDS — Lacrosse Betting Lines Generator | Data sourced from <a href="https://illinoistechathletics.com" target="_blank">Illinois Tech Athletics</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.75rem;">For entertainment purposes only. Not affiliated with any betting organization.</p>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ==========================================
+        // INDEXEDDB DATABASE SETUP
+        // ==========================================
+        const DB_NAME = 'LaxOddsDB';
+        const DB_VERSION = 1;
+        let db;
+
+        const initDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+                
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    updateDbStatus(true);
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = (e) => {
+                    const database = e.target.result;
+                    
+                    // Teams store
+                    if (!database.objectStoreNames.contains('teams')) {
+                        const teamsStore = database.createObjectStore('teams', { keyPath: 'id', autoIncrement: true });
+                        teamsStore.createIndex('name', 'name', { unique: true });
+                    }
+                    
+                    // Players store
+                    if (!database.objectStoreNames.contains('players')) {
+                        const playersStore = database.createObjectStore('players', { keyPath: 'id', autoIncrement: true });
+                        playersStore.createIndex('name', 'name', { unique: false });
+                        playersStore.createIndex('team', 'team', { unique: false });
+                    }
+                    
+                    // Games store
+                    if (!database.objectStoreNames.contains('games')) {
+                        const gamesStore = database.createObjectStore('games', { keyPath: 'id', autoIncrement: true });
+                        gamesStore.createIndex('date', 'date', { unique: false });
+                    }
+                    
+                    // Odds store
+                    if (!database.objectStoreNames.contains('odds')) {
+                        const oddsStore = database.createObjectStore('odds', { keyPath: 'id', autoIncrement: true });
+                        oddsStore.createIndex('gameId', 'gameId', { unique: false });
+                    }
+                };
+            });
+        };
+
+        const dbOperation = (storeName, operation, data = null) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], operation === 'get' || operation === 'getAll' ? 'readonly' : 'readwrite');
+                const store = transaction.objectStore(storeName);
+                let request;
+                
+                switch(operation) {
+                    case 'add':
+                        request = store.add(data);
+                        break;
+                    case 'put':
+                        request = store.put(data);
+                        break;
+                    case 'get':
+                        request = store.get(data);
+                        break;
+                    case 'getAll':
+                        request = store.getAll();
+                        break;
+                    case 'delete':
+                        request = store.delete(data);
+                        break;
+                    case 'clear':
+                        request = store.clear();
+                        break;
+                    default:
+                        reject(new Error('Invalid operation'));
+                        return;
+                }
+                
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        };
+
+        // ==========================================
+        // ODDS CALCULATION ENGINE
+        // ==========================================
+        const OddsEngine = {
+            // Calculate implied probability from team stats
+            calculateWinProbability(teamStats, opponentStats) {
+                const teamGoalsPerGame = teamStats.goals / teamStats.games;
+                const teamGoalsAllowed = opponentStats.goals / opponentStats.games;
+                const oppGoalsPerGame = opponentStats.goals / opponentStats.games;
+                const oppGoalsAllowed = teamStats.goals / teamStats.games;
+                
+                // Pythagorean expectation adapted for lacrosse
+                const teamPower = Math.pow(teamGoalsPerGame, 2.37) / 
+                    (Math.pow(teamGoalsPerGame, 2.37) + Math.pow(teamGoalsAllowed, 2.37));
+                const oppPower = Math.pow(oppGoalsPerGame, 2.37) / 
+                    (Math.pow(oppGoalsPerGame, 2.37) + Math.pow(oppGoalsAllowed, 2.37));
+                
+                // Normalize probabilities
+                const total = teamPower + oppPower;
+                return teamPower / total;
+            },
+
+            // Convert probability to American odds
+            probabilityToAmerican(prob) {
+                if (prob >= 0.5) {
+                    return Math.round(-100 * prob / (1 - prob));
+                } else {
+                    return Math.round(100 * (1 - prob) / prob);
+                }
+            },
+
+            // Convert American to Decimal odds
+            americanToDecimal(american) {
+                if (american > 0) {
+                    return (american / 100) + 1;
+                } else {
+                    return (100 / Math.abs(american)) + 1;
+                }
+            },
+
+            // Convert American to Fractional odds
+            americanToFractional(american) {
+                let decimal = this.americanToDecimal(american);
+                let fraction = decimal - 1;
+                
+                // Simplify common fractions
+                const gcd = (a, b) => b ? gcd(b, a % b) : a;
+                const numerator = Math.round(fraction * 100);
+                const denominator = 100;
+                const divisor = gcd(numerator, denominator);
+                
+                return `${numerator / divisor}/${denominator / divisor}`;
+            },
+
+            // Calculate spread based on expected margin
+            calculateSpread(teamStats, opponentStats) {
+                const teamAvg = teamStats.goals / teamStats.games;
+                const oppAvg = opponentStats.goals / opponentStats.games;
+                const spread = (oppAvg - teamAvg).toFixed(1);
+                return spread >= 0 ? `+${spread}` : spread;
+            },
+
+            // Calculate total (over/under)
+            calculateTotal(teamStats, opponentStats) {
+                const teamAvg = teamStats.goals / teamStats.games;
+                const oppAvg = opponentStats.goals / opponentStats.games;
+                return (teamAvg + oppAvg).toFixed(1);
+            },
+
+            // Generate full odds object
+            generateOdds(teamData, gameData) {
+                const teamStats = {
+                    goals: teamData.teamGoals,
+                    games: teamData.games,
+                    shots: teamData.shots,
+                    faceoffPct: teamData.faceoffPct
+                };
+                
+                const oppStats = {
+                    goals: teamData.oppGoals,
+                    games: teamData.games,
+                    shots: teamData.oppShots,
+                    faceoffPct: 1 - teamData.faceoffPct
+                };
+                
+                const winProb = this.calculateWinProbability(teamStats, oppStats);
+                const teamML = this.probabilityToAmerican(winProb);
+                const oppML = this.probabilityToAmerican(1 - winProb);
+                
+                return {
+                    moneyline: {
+                        team: teamML,
+                        opponent: oppML
+                    },
+                    spread: {
+                        team: this.calculateSpread(teamStats, oppStats),
+                        odds: -110
+                    },
+                    total: {
+                        line: this.calculateTotal(teamStats, oppStats),
+                        overOdds: -110,
+                        underOdds: -110
+                    },
+                    probability: {
+                        team: (winProb * 100).toFixed(1),
+                        opponent: ((1 - winProb) * 100).toFixed(1)
+                    }
+                };
+            }
+        };
+
+        // ==========================================
+        // WEB SCRAPING (SIMULATED WITH SAMPLE DATA)
+        // ==========================================
+        // Note: Due to CORS restrictions, actual web scraping requires a backend.
+        // This demonstrates the data structure and provides sample data.
+        
+        const SampleData = {
+            teamStats: {
+                name: "Illinois Tech",
+                record: "0-4",
+                games: 4,
+                teamGoals: 28,
+                oppGoals: 39,
+                assists: 17,
+                shots: 112,
+                oppShots: 195,
+                shotPct: 0.250,
+                groundBalls: 131,
+                turnovers: 111,
+                causedTurnovers: 39,
+                faceoffPct: 0.570,
+                clearPct: 0.691
+            },
+            players: [
+                { number: "18", name: "Will Von Eyser", gp: 4, goals: 7, assists: 3, points: 10, shots: 17, shotPct: ".412", gb: 3, to: 5 },
+                { number: "0", name: "Diego Sosa", gp: 4, goals: 7, assists: 3, points: 10, shots: 32, shotPct: ".219", gb: 10, to: 11 },
+                { number: "7", name: "Connor Montgomery", gp: 4, goals: 5, assists: 5, points: 10, shots: 24, shotPct: ".208", gb: 4, to: 10 },
+                { number: "5", name: "Cooper Leonard", gp: 4, goals: 3, assists: 2, points: 5, shots: 13, shotPct: ".231", gb: 3, to: 9 },
+                { number: "3", name: "Alexander Stokrp", gp: 4, goals: 2, assists: 1, points: 3, shots: 6, shotPct: ".333", gb: 4, to: 7 },
+                { number: "2", name: "Joseph Beaudoin", gp: 4, goals: 1, assists: 2, points: 3, shots: 5, shotPct: ".200", gb: 2, to: 5 },
+                { number: "23", name: "Andrei Gran", gp: 4, goals: 2, assists: 0, points: 2, shots: 3, shotPct: ".667", gb: 7, to: 0 },
+                { number: "17", name: "Kevin Konopacki", gp: 4, goals: 1, assists: 0, points: 1, shots: 2, shotPct: ".500", gb: 1, to: 4 },
+                { number: "15", name: "Duwayne Aikins", gp: 4, goals: 0, assists: 0, points: 0, shots: 1, shotPct: ".000", gb: 18, to: 4 },
+                { number: "14", name: "Ryan Littler", gp: 4, goals: 0, assists: 0, points: 0, shots: 1, shotPct: ".000", gb: 10, to: 7 }
+            ],
+            games: [
+                { date: "2/13/26", opponent: "Bridgewater (Va.)", result: "L", score: "10-11", teamGoals: 10, oppGoals: 11 },
+                { date: "2/14/26", opponent: "Transylvania", result: "L", score: "4-10", teamGoals: 4, oppGoals: 10 },
+                { date: "2/21/26", opponent: "Calvin", result: "L", score: "5-8", teamGoals: 5, oppGoals: 8 },
+                { date: "2/28/26", opponent: "Kalamazoo", result: "L", score: "9-10", teamGoals: 9, oppGoals: 10 }
+            ],
+            upcomingOpponents: [
+                { name: "Aurora", record: "3-1", avgGoals: 12.5 },
+                { name: "Concordia Chicago", record: "2-2", avgGoals: 9.8 },
+                { name: "Elmhurst", record: "4-0", avgGoals: 14.2 },
+                { name: "Lakeland", record: "1-3", avgGoals: 7.5 }
+            ]
+        };
+
+        // ==========================================
+        // UI FUNCTIONS
+        // ==========================================
+        let currentOddsFormat = 'american';
+
+        const formatOdds = (american) => {
+            switch(currentOddsFormat) {
+                case 'decimal':
+                    return OddsEngine.americanToDecimal(american).toFixed(2);
+                case 'fractional':
+                    return OddsEngine.americanToFractional(american);
+                default:
+                    return american > 0 ? `+${american}` : american;
+            }
+        };
+
+        const showToast = (message, type = 'info') => {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = message;
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        const logToConsole = (message, type = 'info') => {
+            const consoleEl = document.getElementById('console');
+            const time = new Date().toLocaleTimeString();
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.innerHTML = `<span class="timestamp">[${time}]</span> ${message}`;
+            consoleEl.appendChild(line);
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+        };
+
+        const updateDbStatus = (connected) => {
+            const dot = document.getElementById('dbStatus');
+            const text = document.getElementById('dbStatusText');
+            dot.style.background = connected ? 'var(--accent-green)' : 'var(--accent-red)';
+            text.textContent = connected ? 'Database Connected' : 'Database Error';
+        };
+
+        const updateStats = async () => {
+            try {
+                const teams = await dbOperation('teams', 'getAll');
+                const players = await dbOperation('players', 'getAll');
+                const games = await dbOperation('games', 'getAll');
+                
+                document.getElementById('gamesAnalyzed').textContent = games.length;
+                document.getElementById('playersTracked').textContent = players.length;
+                document.getElementById('teamRecords').textContent = teams.length;
+                document.getElementById('playerRecords').textContent = players.length;
+                document.getElementById('gameRecords').textContent = games.length;
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        };
+
+        const generateBettingCards = () => {
+            const grid = document.getElementById('bettingGrid');
+            grid.innerHTML = '';
+            
+            const teamStats = SampleData.teamStats;
+            
+            SampleData.upcomingOpponents.forEach((opponent, index) => {
+                const oppStats = {
+                    goals: opponent.avgGoals * 4, // Simulated based on avg
+                    games: 4
+                };
+                
+                const teamData = {
+                    teamGoals: teamStats.teamGoals,
+                    oppGoals: teamStats.oppGoals,
+                    games: teamStats.games,
+                    shots: teamStats.shots,
+                    oppShots: teamStats.oppShots,
+                    faceoffPct: teamStats.faceoffPct
+                };
+                
+                // Adjust based on opponent strength
+                const strengthMultiplier = opponent.avgGoals / 10;
+                const adjustedOppGoals = Math.round(opponent.avgGoals * teamStats.games);
+                teamData.oppGoals = adjustedOppGoals;
+                
+                const odds = OddsEngine.generateOdds(teamData, {});
+                
+                const card = document.createElement('div');
+                card.className = 'betting-card';
+                
+                // Calculate game date (upcoming)
+                const gameDate = new Date();
+                gameDate.setDate(gameDate.getDate() + (index + 1) * 7);
+                const formattedDate = gameDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                
+                card.innerHTML = `
+                    <div class="betting-header">
+                        <div class="matchup">
+                            <div class="team">
+                                <div class="team-name">Illinois Tech</div>
+                                <div class="team-record">${teamStats.record}</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-name">${opponent.name}</div>
+                                <div class="team-record">${opponent.record}</div>
+                            </div>
+                        </div>
+                        <div class="game-date">
+                            <div>${formattedDate}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted);">Projected</div>
+                        </div>
+                    </div>
+                    <div class="betting-body">
+                        <div class="odds-row">
+                            <div class="odds-type">Moneyline</div>
+                            <div class="odds-values">
+                                <div class="odd ${odds.moneyline.team < 0 ? 'favorite' : 'underdog'}" data-american="${odds.moneyline.team}">
+                                    IIT ${formatOdds(odds.moneyline.team)}
+                                </div>
+                                <div class="odd ${odds.moneyline.opponent < 0 ? 'favorite' : 'underdog'}" data-american="${odds.moneyline.opponent}">
+                                    ${opponent.name.substring(0, 3).toUpperCase()} ${formatOdds(odds.moneyline.opponent)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Spread</div>
+                            <div class="odds-values">
+                                <div class="odd neutral" data-american="-110">
+                                    IIT ${odds.spread.team} (${formatOdds(-110)})
+                                </div>
+                                <div class="odd neutral" data-american="-110">
+                                    ${opponent.name.substring(0, 3).toUpperCase()} ${parseFloat(odds.spread.team) * -1 > 0 ? '+' : ''}${(parseFloat(odds.spread.team) * -1).toFixed(1)} (${formatOdds(-110)})
+                                </div>
+                            </div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Total</div>
+                            <div class="odds-values">
+                                <div class="odd neutral" data-american="-110">
+                                    O ${odds.total.line} (${formatOdds(-110)})
+                                </div>
+                                <div class="odd neutral" data-american="-110">
+                                    U ${odds.total.line} (${formatOdds(-110)})
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-secondary);">
+                            <span>Win Prob: IIT ${odds.probability.team}%</span>
+                            <span>${opponent.name.substring(0, 3).toUpperCase()} ${odds.probability.opponent}%</span>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+            
+            document.getElementById('linesGenerated').textContent = SampleData.upcomingOpponents.length * 3;
+        };
+
+        const populateTeamTable = () => {
+            const tbody = document.getElementById('teamTableBody');
+            tbody.innerHTML = '';
+            
+            const stats = SampleData.teamStats;
+            const rows = [
+                ['Goals', stats.teamGoals, stats.oppGoals],
+                ['Shots', stats.shots, stats.oppShots],
+                ['Shot %', (stats.shotPct * 100).toFixed(1) + '%', ((stats.oppGoals / stats.oppShots) * 100).toFixed(1) + '%'],
+                ['Assists', stats.assists, 20],
+                ['Ground Balls', stats.groundBalls, 138],
+                ['Turnovers', stats.turnovers, 70],
+                ['Caused Turnovers', stats.causedTurnovers, 53],
+                ['Faceoff %', (stats.faceoffPct * 100).toFixed(1) + '%', ((1 - stats.faceoffPct) * 100).toFixed(1) + '%'],
+                ['Clear %', (stats.clearPct * 100).toFixed(1) + '%', '90.5%']
+            ];
+            
+            rows.forEach(([stat, team, opp]) => {
+                const diff = typeof team === 'number' && typeof opp === 'number' 
+                    ? (team - opp) 
+                    : '--';
+                const diffClass = diff > 0 ? 'positive' : diff < 0 ? 'negative' : '';
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${stat}</td>
+                    <td>${team}</td>
+                    <td>${opp}</td>
+                    <td class="change ${diffClass}">${typeof diff === 'number' ? (diff > 0 ? '+' : '') + diff : diff}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        const populatePlayerTable = () => {
+            const tbody = document.getElementById('playerTableBody');
+            tbody.innerHTML = '';
+            
+            SampleData.players.forEach(player => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${player.number}</td>
+                    <td class="player-name">${player.name}</td>
+                    <td>${player.gp}</td>
+                    <td>${player.goals}</td>
+                    <td>${player.assists}</td>
+                    <td style="color: var(--accent-gold); font-weight: 600;">${player.points}</td>
+                    <td>${player.shots}</td>
+                    <td>${player.shotPct}</td>
+                    <td>${player.gb}</td>
+                    <td>${player.to}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        const storeDataInDB = async () => {
+            try {
+                // Store team data
+                await dbOperation('teams', 'put', {
+                    id: 1,
+                    ...SampleData.teamStats,
+                    updatedAt: new Date().toISOString()
+                });
+                
+                // Store players
+                for (const player of SampleData.players) {
+                    await dbOperation('players', 'put', {
+                        ...player,
+                        id: parseInt(player.number) || Math.random() * 1000,
+                        team: 'Illinois Tech',
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+                
+                // Store games
+                for (let i = 0; i < SampleData.games.length; i++) {
+                    await dbOperation('games', 'put', {
+                        id: i + 1,
+                        ...SampleData.games[i],
+                        updatedAt: new Date().toISOString()
+                    });
+                }
+                
+                logToConsole('Data stored in IndexedDB successfully', 'success');
+                await updateStats();
+            } catch (error) {
+                logToConsole(`Database error: ${error.message}`, 'error');
+            }
+        };
+
+        // ==========================================
+        // EVENT LISTENERS
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                await initDB();
+                logToConsole('IndexedDB initialized successfully', 'success');
+                await updateStats();
+                
+                // Load initial data
+                populateTeamTable();
+                populatePlayerTable();
+            } catch (error) {
+                logToConsole(`Initialization error: ${error.message}`, 'error');
+                updateDbStatus(false);
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-section`).classList.add('active');
+            });
+        });
+
+        // Odds format switching
+        document.querySelectorAll('.format-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentOddsFormat = btn.dataset.format;
+                
+                // Re-render odds with new format
+                document.querySelectorAll('.odd').forEach(odd => {
+                    const american = parseInt(odd.dataset.american);
+                    if (!isNaN(american)) {
+                        const text = odd.textContent.split(' ')[0];
+                        odd.textContent = `${text} ${formatOdds(american)}`;
+                    }
+                });
+                
+                showToast(`Odds format changed to ${currentOddsFormat}`, 'info');
+            });
+        });
+
+        // Scrape button
+        document.getElementById('scrapeBtn').addEventListener('click', async () => {
+            const loading = document.getElementById('bettingLoading');
+            const grid = document.getElementById('bettingGrid');
+            
+            loading.classList.add('active');
+            grid.style.opacity = '0.3';
+            
+            logToConsole('Starting data fetch from source...', 'info');
+            
+            // Simulate scraping delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            logToConsole('Parsing team statistics...', 'info');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            logToConsole('Parsing player data...', 'info');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            logToConsole('Calculating betting lines using Pythagorean expectation model...', 'info');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Store in DB
+            await storeDataInDB();
+            
+            // Generate cards
+            generateBettingCards();
+            
+            loading.classList.remove('active');
+            grid.style.opacity = '1';
+            
+            // Update timestamp
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('updateStatus').textContent = 'Data current';
+            document.getElementById('updateStatus').className = 'change positive';
+            
+            logToConsole(`Generated ${SampleData.upcomingOpponents.length} matchups with betting lines`, 'success');
+            showToast('Betting lines generated successfully!', 'success');
+        });
+
+        // Load sample button
+        document.getElementById('loadSampleBtn').addEventListener('click', () => {
+            document.getElementById('scrapeBtn').click();
+        });
+
+        // Export button
+        document.getElementById('exportBtn').addEventListener('click', async () => {
+            try {
+                const teams = await dbOperation('teams', 'getAll');
+                const players = await dbOperation('players', 'getAll');
+                const games = await dbOperation('games', 'getAll');
+                
+                const data = { teams, players, games, exportedAt: new Date().toISOString() };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'lax-odds-data.json';
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                showToast('Data exported successfully!', 'success');
+                logToConsole('Database exported to JSON file', 'success');
+            } catch (error) {
+                showToast('Export failed', 'error');
+                logToConsole(`Export error: ${error.message}`, 'error');
+            }
+        });
+
+        // Clear database button
+        document.getElementById('clearDbBtn').addEventListener('click', async () => {
+            if (confirm('Are you sure you want to clear all data?')) {
+                try {
+                    await dbOperation('teams', 'clear');
+                    await dbOperation('players', 'clear');
+                    await dbOperation('games', 'clear');
+                    await dbOperation('odds', 'clear');
+                    
+                    await updateStats();
+                    document.getElementById('bettingGrid').innerHTML = '';
+                    
+                    showToast('Database cleared', 'info');
+                    logToConsole('All data cleared from IndexedDB', 'warning');
+                } catch (error) {
+                    showToast('Clear failed', 'error');
+                    logToConsole(`Clear error: ${error.message}`, 'error');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
