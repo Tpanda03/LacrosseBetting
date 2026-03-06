@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAX ODDS — Illinois Tech Lacrosse Betting Lines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-elevated: #1a1a25;
+            --accent-gold: #d4af37;
+            --accent-green: #00ff88;
+            --accent-red: #ff4757;
+            --accent-blue: #4facfe;
+            --accent-purple: #a855f7;
+            --text-primary: #ffffff;
+            --text-secondary: #8a8a9a;
+            --text-muted: #5a5a6a;
+            --border-subtle: rgba(212, 175, 55, 0.15);
+            --scarlet: #c41e3a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+        .bg-pattern {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(ellipse at 20% 20%, rgba(196, 30, 58, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
+                        linear-gradient(180deg, #0a0a0f 0%, #0f0f18 100%);
+        }
+
+        /* Header */
+        header {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(10, 10, 15, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .logo-icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, var(--scarlet), #8b1428);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.1rem;
+            color: white;
+        }
+        .logo h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--scarlet), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-elevated);
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        .user-avatar {
+            width: 24px; height: 24px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--scarlet), #8b1428);
+            color: white;
+        }
+        .btn-primary:hover { transform: translateY(-1px); }
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+        }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+        .btn-ghost:hover { color: var(--text-primary); }
+
+        /* Main Layout */
+        main {
+            padding: 1.5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Auth Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        .modal h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            color: var(--accent-gold);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Outfit', sans-serif;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+        .modal-actions .btn {
+            width: 100%;
+            padding: 0.75rem;
+        }
+        .modal-toggle {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .modal-toggle a {
+            color: var(--accent-gold);
+            cursor: pointer;
+        }
+        .error-msg {
+            background: rgba(255,71,87,0.1);
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .error-msg.show { display: block; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 0.75rem;
+            overflow-x: auto;
+        }
+        .tab {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 6px;
+            white-space: nowrap;
+        }
+        .tab.active {
+            background: var(--bg-elevated);
+            color: var(--accent-gold);
+        }
+
+        /* Content Sections */
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            min-width: 140px;
+            text-align: center;
+        }
+        .stat-item .label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .stat-item .value {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: var(--accent-gold);
+            margin-top: 0.25rem;
+        }
+
+        /* Games Grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1rem;
+        }
+        .game-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        .game-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+        .game-card.featured {
+            border: 2px solid var(--scarlet);
+            grid-column: 1 / -1;
+        }
+        .game-header {
+            padding: 1rem;
+            background: var(--bg-elevated);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .game-teams {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .team-name { font-weight: 600; }
+        .team-record { font-size: 0.7rem; color: var(--text-secondary); }
+        .game-vs {
+            color: var(--accent-gold);
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .game-date {
+            text-align: right;
+            font-size: 0.8rem;
+        }
+        .game-body { padding: 1rem; }
+        .odds-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .odds-row:last-child { border-bottom: none; }
+        .odds-type {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .odds-values { display: flex; gap: 0.5rem; }
+        .odd-btn {
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-dark);
+            border: 1px solid transparent;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .odd-btn:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-elevated);
+        }
+        .odd-btn.selected {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+        }
+        .odd-btn.favorite { color: var(--accent-red); }
+        .odd-btn.underdog { color: var(--accent-green); }
+
+        /* My Picks Section */
+        .picks-list { display: flex; flex-direction: column; gap: 0.75rem; }
+        .pick-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .pick-info h4 { font-size: 0.95rem; margin-bottom: 0.25rem; }
+        .pick-info p { font-size: 0.8rem; color: var(--text-secondary); }
+        .pick-odds {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .pick-status {
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .pick-status.pending { background: rgba(79, 172, 254, 0.2); color: var(--accent-blue); }
+        .pick-status.win { background: rgba(0, 255, 136, 0.2); color: var(--accent-green); }
+        .pick-status.loss { background: rgba(255, 71, 87, 0.2); color: var(--accent-red); }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 1000;
+        }
+        .toast {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            animation: slideIn 0.3s ease;
+        }
+        .toast.success { border-left: 3px solid var(--accent-green); }
+        .toast.error { border-left: 3px solid var(--accent-red); }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+        .spinner {
+            width: 30px; height: 30px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header { padding: 0.75rem 1rem; flex-wrap: wrap; gap: 0.75rem; }
+            main { padding: 1rem; }
+            .games-grid { grid-template-columns: 1fr; }
+            .stats-bar { flex-wrap: wrap; }
+            .stat-item { min-width: calc(50% - 0.5rem); }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+
+    <header>
+        <div class="logo">
+            <div class="logo-icon">IIT</div>
+            <h1>LAX ODDS</h1>
+        </div>
+        <div class="header-actions">
+            <div id="authButtons">
+                <button class="btn btn-secondary" onclick="showModal('login')">Login</button>
+                <button class="btn btn-primary" onclick="showModal('register')">Sign Up</button>
+            </div>
+            <div id="userMenu" style="display: none;">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">U</div>
+                    <span id="userName">User</span>
+                </div>
+                <button class="btn btn-ghost" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="label">Upcoming Games</div>
+                <div class="value" id="upcomingCount">-</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">Teams Tracked</div>
+                <div class="value" id="teamCount">-</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">My Picks</div>
+                <div class="value" id="myPicksCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="label">Last Updated</div>
+                <div class="value" id="lastUpdate">--:--</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="games">All Games</button>
+            <button class="tab" data-tab="picks">My Picks</button>
+            <button class="tab" data-tab="standings">Teams</button>
+        </div>
+
+        <!-- Games Section -->
+        <section class="content-section active" id="games-section">
+            <div class="loading" id="gamesLoading">
+                <div class="spinner"></div>
+                Loading games...
+            </div>
+            <div class="games-grid" id="gamesGrid"></div>
+        </section>
+
+        <!-- My Picks Section -->
+        <section class="content-section" id="picks-section">
+            <div id="picksContent">
+                <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+                    Login to save and track your picks across devices
+                </p>
+            </div>
+        </section>
+
+        <!-- Teams Section -->
+        <section class="content-section" id="standings-section">
+            <div class="games-grid" id="teamsGrid"></div>
+        </section>
+    </main>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <h2 id="modalTitle">Login</h2>
+            <div class="error-msg" id="authError"></div>
+            <form id="authForm">
+                <div class="form-group" id="usernameGroup" style="display: none;">
+                    <label>Username</label>
+                    <input type="text" id="usernameInput" placeholder="Your username">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="emailInput" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="passwordInput" placeholder="••••••••" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn btn-primary" id="authSubmit">Login</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideModal()">Cancel</button>
+                </div>
+            </form>
+            <div class="modal-toggle" id="modalToggle">
+                Don't have an account? <a onclick="toggleAuthMode()">Sign up</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        // ==========================================
+        // STATE
+        // ==========================================
+        let currentUser = null;
+        let authMode = 'login';
+        let games = [];
+        let userPicks = [];
+
+        const API_URL = '/api';
+
+        // ==========================================
+        // API HELPERS
+        // ==========================================
+        const api = {
+            token: localStorage.getItem('token'),
+
+            setToken(token) {
+                this.token = token;
+                if (token) {
+                    localStorage.setItem('token', token);
+                } else {
+                    localStorage.removeItem('token');
+                }
+            },
+
+            async request(endpoint, options = {}) {
+                const headers = {
+                    'Content-Type': 'application/json',
+                    ...(this.token && { 'Authorization': `Bearer ${this.token}` })
+                };
+
+                const response = await fetch(`${API_URL}${endpoint}`, {
+                    ...options,
+                    headers: { ...headers, ...options.headers }
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Request failed');
+                }
+
+                return data;
+            },
+
+            get: (endpoint) => api.request(endpoint),
+            post: (endpoint, body) => api.request(endpoint, { method: 'POST', body: JSON.stringify(body) }),
+            delete: (endpoint) => api.request(endpoint, { method: 'DELETE' })
+        };
+
+        // ==========================================
+        // AUTH
+        // ==========================================
+        function showModal(mode) {
+            authMode = mode;
+            document.getElementById('authModal').classList.add('active');
+            document.getElementById('modalTitle').textContent = mode === 'login' ? 'Login' : 'Create Account';
+            document.getElementById('authSubmit').textContent = mode === 'login' ? 'Login' : 'Sign Up';
+            document.getElementById('usernameGroup').style.display = mode === 'register' ? 'block' : 'none';
+            document.getElementById('modalToggle').innerHTML = mode === 'login'
+                ? "Don't have an account? <a onclick=\"toggleAuthMode()\">Sign up</a>"
+                : "Already have an account? <a onclick=\"toggleAuthMode()\">Login</a>";
+            document.getElementById('authError').classList.remove('show');
+        }
+
+        function hideModal() {
+            document.getElementById('authModal').classList.remove('active');
+            document.getElementById('authForm').reset();
+        }
+
+        function toggleAuthMode() {
+            showModal(authMode === 'login' ? 'register' : 'login');
+        }
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            const username = document.getElementById('usernameInput').value;
+
+            try {
+                const endpoint = authMode === 'login' ? '/auth/login' : '/auth/register';
+                const body = authMode === 'login' 
+                    ? { email, password }
+                    : { email, password, username };
+
+                const data = await api.post(endpoint, body);
+                
+                api.setToken(data.token);
+                currentUser = data.user;
+                updateAuthUI();
+                hideModal();
+                toast(`Welcome${authMode === 'login' ? ' back' : ''}, ${currentUser.username}!`, 'success');
+                loadUserPicks();
+            } catch (error) {
+                document.getElementById('authError').textContent = error.message;
+                document.getElementById('authError').classList.add('show');
+            }
+        });
+
+        function logout() {
+            api.setToken(null);
+            currentUser = null;
+            userPicks = [];
+            updateAuthUI();
+            toast('Logged out', 'success');
+        }
+
+        function updateAuthUI() {
+            const authButtons = document.getElementById('authButtons');
+            const userMenu = document.getElementById('userMenu');
+
+            if (currentUser) {
+                authButtons.style.display = 'none';
+                userMenu.style.display = 'flex';
+                document.getElementById('userName').textContent = currentUser.username;
+                document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+            } else {
+                authButtons.style.display = 'flex';
+                userMenu.style.display = 'none';
+            }
+
+            document.getElementById('myPicksCount').textContent = userPicks.length;
+        }
+
+        async function checkAuth() {
+            if (api.token) {
+                try {
+                    const data = await api.get('/auth/me');
+                    currentUser = data.user;
+                    updateAuthUI();
+                    loadUserPicks();
+                } catch (error) {
+                    api.setToken(null);
+                }
+            }
+        }
+
+        // ==========================================
+        // GAMES & ODDS
+        // ==========================================
+        async function loadGames() {
+            try {
+                games = await api.get('/games?upcoming=true');
+                renderGames();
+                document.getElementById('gamesLoading').style.display = 'none';
+            } catch (error) {
+                console.error('Failed to load games:', error);
+                // Fall back to sample data if API fails
+                renderSampleGames();
+            }
+        }
+
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            
+            if (games.length === 0) {
+                grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">No upcoming games found</p>';
+                return;
+            }
+
+            grid.innerHTML = games.map((game, index) => {
+                const isFirst = index === 0;
+                return `
+                    <div class="game-card ${isFirst ? 'featured' : ''}">
+                        <div class="game-header">
+                            <div class="game-teams">
+                                <div>
+                                    <div class="team-name" style="color: ${game.home_team_name?.includes('Illinois Tech') ? 'var(--scarlet)' : 'inherit'}">
+                                        ${game.home_team_name || 'Home'}
+                                    </div>
+                                    <div class="team-record">${game.home_record || '0-0'}</div>
+                                </div>
+                                <div class="game-vs">VS</div>
+                                <div>
+                                    <div class="team-name">${game.away_team_name || 'Away'}</div>
+                                    <div class="team-record">${game.away_record || '0-0'}</div>
+                                </div>
+                            </div>
+                            <div class="game-date">
+                                <div>${new Date(game.game_date).toLocaleDateString()}</div>
+                                <div style="color: var(--text-muted)">${game.game_time || ''}</div>
+                            </div>
+                        </div>
+                        <div class="game-body">
+                            <div class="odds-row">
+                                <div class="odds-type">Moneyline</div>
+                                <div class="odds-values">
+                                    <button class="odd-btn ${game.home_moneyline < 0 ? 'favorite' : 'underdog'}" 
+                                            onclick="makePick(${game.id}, 'moneyline', 'home', ${game.home_moneyline})">
+                                        ${game.home_abbrev || 'H'} ${formatOdds(game.home_moneyline)}
+                                    </button>
+                                    <button class="odd-btn ${game.away_moneyline < 0 ? 'favorite' : 'underdog'}"
+                                            onclick="makePick(${game.id}, 'moneyline', 'away', ${game.away_moneyline})">
+                                        ${game.away_abbrev || 'A'} ${formatOdds(game.away_moneyline)}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="odds-row">
+                                <div class="odds-type">Spread</div>
+                                <div class="odds-values">
+                                    <button class="odd-btn" onclick="makePick(${game.id}, 'spread', 'home', -110)">
+                                        ${game.spread_line >= 0 ? '+' : ''}${game.spread_line} (-110)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="odds-row">
+                                <div class="odds-type">Total</div>
+                                <div class="odds-values">
+                                    <button class="odd-btn" onclick="makePick(${game.id}, 'total', 'over', -110)">
+                                        O ${game.total_line}
+                                    </button>
+                                    <button class="odd-btn" onclick="makePick(${game.id}, 'total', 'under', -110)">
+                                        U ${game.total_line}
+                                    </button>
+                                </div>
+                            </div>
+                            ${game.home_win_prob ? `
+                                <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+                                    <div style="height: 6px; background: var(--bg-dark); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: ${game.home_win_prob}%; height: 100%; background: linear-gradient(90deg, var(--scarlet), var(--accent-gold));"></div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                        <span>Win: ${game.home_win_prob}%</span>
+                                        <span>${game.away_win_prob}%</span>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('upcomingCount').textContent = games.length;
+            document.getElementById('gamesLoading').style.display = 'none';
+        }
+
+        function renderSampleGames() {
+            // Sample data fallback
+            games = [
+                { id: 1, home_team_name: 'Illinois Tech', away_team_name: 'DePauw', home_record: '0-4', away_record: '2-2', game_date: '2026-03-07', game_time: '2:00 PM', home_moneyline: 180, away_moneyline: -210, spread_line: 2.5, total_line: 16.5, home_win_prob: 35, away_win_prob: 65 },
+                { id: 2, home_team_name: 'Hope', away_team_name: 'Illinois Tech', home_record: '3-1', away_record: '0-4', game_date: '2026-03-11', game_time: '6:00 PM', home_moneyline: -300, away_moneyline: 240, spread_line: -4.5, total_line: 17.5, home_win_prob: 72, away_win_prob: 28 },
+            ];
+            renderGames();
+        }
+
+        function formatOdds(odds) {
+            if (!odds) return '--';
+            return odds > 0 ? `+${odds}` : odds;
+        }
+
+        // ==========================================
+        // PICKS
+        // ==========================================
+        async function makePick(gameId, pickType, pickValue, odds) {
+            if (!currentUser) {
+                showModal('login');
+                toast('Please login to save picks', 'error');
+                return;
+            }
+
+            try {
+                await api.post('/picks', {
+                    gameId,
+                    pickType,
+                    pickValue,
+                    oddsAtPick: odds,
+                    stake: 0
+                });
+                toast('Pick saved!', 'success');
+                loadUserPicks();
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+        }
+
+        async function loadUserPicks() {
+            if (!currentUser) return;
+
+            try {
+                userPicks = await api.get('/picks');
+                renderUserPicks();
+                document.getElementById('myPicksCount').textContent = userPicks.length;
+            } catch (error) {
+                console.error('Failed to load picks:', error);
+            }
+        }
+
+        function renderUserPicks() {
+            const container = document.getElementById('picksContent');
+
+            if (userPicks.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">No picks yet. Click on odds to make a pick!</p>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="picks-list">
+                    ${userPicks.map(pick => `
+                        <div class="pick-card">
+                            <div class="pick-info">
+                                <h4>${pick.home_team} vs ${pick.away_team}</h4>
+                                <p>${pick.pick_type.toUpperCase()}: ${pick.pick_value}</p>
+                            </div>
+                            <div class="pick-odds ${pick.odds_at_pick > 0 ? 'underdog' : 'favorite'}" style="color: ${pick.odds_at_pick > 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">
+                                ${formatOdds(pick.odds_at_pick)}
+                            </div>
+                            <span class="pick-status ${pick.result || 'pending'}">${pick.result || 'Pending'}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // ==========================================
+        // TEAMS
+        // ==========================================
+        async function loadTeams() {
+            try {
+                const teams = await api.get('/teams');
+                renderTeams(teams);
+            } catch (error) {
+                console.error('Failed to load teams:', error);
+            }
+        }
+
+        function renderTeams(teams) {
+            const grid = document.getElementById('teamsGrid');
+            grid.innerHTML = teams.map(team => `
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="team-name" style="color: ${team.name.includes('Illinois Tech') ? 'var(--scarlet)' : 'inherit'}">
+                            ${team.name}
+                        </div>
+                        <div class="team-record">${team.record || '0-0'}</div>
+                    </div>
+                    <div class="game-body">
+                        <div class="odds-row">
+                            <div class="odds-type">Goals/Game</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${team.goals_per_game?.toFixed(1) || '--'}</div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Goals Allowed</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${team.goals_allowed_per_game?.toFixed(1) || '--'}</div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Faceoff %</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${team.faceoff_pct ? (team.faceoff_pct * 100).toFixed(1) + '%' : '--'}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('teamCount').textContent = teams.length;
+        }
+
+        // ==========================================
+        // STATS
+        // ==========================================
+        async function loadStats() {
+            try {
+                const stats = await api.get('/stats');
+                document.getElementById('upcomingCount').textContent = stats.upcoming_games || 0;
+                document.getElementById('teamCount').textContent = stats.teams || 0;
+                if (stats.last_scrape) {
+                    document.getElementById('lastUpdate').textContent = new Date(stats.last_scrape).toLocaleTimeString();
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        // ==========================================
+        // TABS
+        // ==========================================
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-section`).classList.add('active');
+            });
+        });
+
+        // ==========================================
+        // TOAST
+        // ==========================================
+        function toast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            t.textContent = message;
+            container.appendChild(t);
+            setTimeout(() => t.remove(), 3000);
+        }
+
+        // ==========================================
+        // INIT
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', async () => {
+            await checkAuth();
+            loadGames();
+            loadTeams();
+            loadStats();
+        });
+    </script>
+</body>
+</html>
