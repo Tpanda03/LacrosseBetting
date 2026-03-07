@@ -85,6 +85,30 @@
             border-radius: 6px;
             font-size: 0.8rem;
         }
+        .api-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+        .api-status.live {
+            color: var(--accent-green);
+            background: rgba(0, 255, 136, 0.1);
+            border-color: rgba(0, 255, 136, 0.25);
+        }
+        .api-status.demo, .api-status.offline {
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--border-subtle);
+        }
+        .api-status.connecting {
+            color: var(--accent-blue);
+            background: rgba(79, 172, 254, 0.1);
+            border-color: rgba(79, 172, 254, 0.2);
+        }
         .user-avatar {
             width: 24px; height: 24px;
             background: var(--accent-purple);
@@ -145,6 +169,11 @@
             padding: 2rem;
             width: 100%;
             max-width: 400px;
+        }
+        .modal.modal-wide {
+            max-width: 960px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
         .modal h2 {
             font-family: 'Bebas Neue', sans-serif;
@@ -237,6 +266,11 @@
         /* Content Sections */
         .content-section { display: none; }
         .content-section.active { display: block; animation: fadeIn 0.3s ease; }
+        .section-note {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -348,8 +382,129 @@
             border-color: var(--accent-green);
             background: rgba(0, 255, 136, 0.1);
         }
+        .odd-btn.tone-positive {
+            color: var(--accent-green);
+            border-color: rgba(0, 255, 136, 0.18);
+            background: rgba(0, 255, 136, 0.06);
+        }
+        .odd-btn.tone-negative {
+            color: var(--accent-red);
+            border-color: rgba(255, 71, 87, 0.18);
+            background: rgba(255, 71, 87, 0.06);
+        }
+        .odd-btn.selected.tone-positive,
+        .odd-btn.selected.tone-negative {
+            border-color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.12);
+            color: var(--text-primary);
+        }
         .odd-btn.favorite { color: var(--accent-red); }
         .odd-btn.underdog { color: var(--accent-green); }
+        .game-actions {
+            margin-top: 1rem;
+            padding-top: 0.9rem;
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: flex-end;
+        }
+        .btn-inline {
+            width: 100%;
+            text-align: center;
+        }
+        .subtabs {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        .subtab {
+            padding: 0.45rem 0.9rem;
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .subtab.active {
+            color: var(--accent-gold);
+            border-color: rgba(212, 175, 55, 0.4);
+            background: rgba(212, 175, 55, 0.08);
+        }
+        .player-props-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+        .player-prop-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 0.9rem;
+        }
+        .player-prop-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            align-items: baseline;
+        }
+        .player-name {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .player-meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        .player-prop-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+        .player-prop-line {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            align-items: center;
+            padding-top: 0.55rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .player-prop-line:first-child {
+            padding-top: 0;
+            border-top: none;
+        }
+        .player-prop-market {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .player-prop-odds {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .modal-topline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .modal-matchup {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.05em;
+        }
+        .modal-note {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
 
         /* My Picks Section */
         .picks-list { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -378,6 +533,33 @@
         .pick-status.pending { background: rgba(79, 172, 254, 0.2); color: var(--accent-blue); }
         .pick-status.win { background: rgba(0, 255, 136, 0.2); color: var(--accent-green); }
         .pick-status.loss { background: rgba(255, 71, 87, 0.2); color: var(--accent-red); }
+        .empty-state {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 2rem;
+        }
+        .prop-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.35rem 0.7rem;
+            border-radius: 999px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-subtle);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            white-space: nowrap;
+        }
+        .result-score {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 0.06em;
+            color: var(--accent-gold);
+        }
+        .result-meta {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
 
         /* Toast */
         .toast-container {
@@ -439,6 +621,7 @@
             <h1>LAX ODDS</h1>
         </div>
         <div class="header-actions">
+            <div class="api-status connecting" id="apiStatus">Connecting</div>
             <div id="authButtons">
                 <button class="btn btn-secondary" onclick="showModal('login')">Login</button>
                 <button class="btn btn-primary" onclick="showModal('register')">Sign Up</button>
@@ -473,10 +656,13 @@
                 <div class="value" id="lastUpdate">--:--</div>
             </div>
         </div>
+        <div class="section-note" id="apiNote">Looking for a live API…</div>
 
         <!-- Tabs -->
         <div class="tabs">
-            <button class="tab active" data-tab="games">All Games</button>
+            <button class="tab active" data-tab="games">Upcoming Games</button>
+            <button class="tab" data-tab="props">Player Props</button>
+            <button class="tab" data-tab="results">Past Results</button>
             <button class="tab" data-tab="picks">My Picks</button>
             <button class="tab" data-tab="standings">Teams</button>
         </div>
@@ -488,6 +674,21 @@
                 Loading games...
             </div>
             <div class="games-grid" id="gamesGrid"></div>
+        </section>
+
+        <!-- Player Props Section -->
+        <section class="content-section" id="props-section">
+            <div class="subtabs">
+                <button class="subtab active" data-props-view="iit">IIT Props</button>
+                <button class="subtab" data-props-view="all">All Props</button>
+            </div>
+            <div class="section-note" id="propsNote">Illinois Tech player props against upcoming opponents.</div>
+            <div class="games-grid" id="propsGrid"></div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="content-section" id="results-section">
+            <div class="games-grid" id="resultsGrid"></div>
         </section>
 
         <!-- My Picks Section -->
@@ -534,24 +735,460 @@
         </div>
     </div>
 
+    <div class="modal-overlay" id="gamePropsModal">
+        <div class="modal modal-wide">
+            <div class="modal-topline">
+                <div>
+                    <div class="modal-matchup" id="gamePropsMatchup">Game Props</div>
+                    <div class="team-record" id="gamePropsMeta">Upcoming matchup</div>
+                </div>
+                <button type="button" class="btn btn-secondary" onclick="closeGamePropsModal()">Close</button>
+            </div>
+            <div class="modal-note" id="gamePropsNote">Showing Illinois Tech player props for this matchup.</div>
+            <div id="gamePropsContent">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading player props...
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <script>
-        // ==========================================
-        // STATE
-        // ==========================================
         let currentUser = null;
         let authMode = 'login';
         let games = [];
+        let completedGames = [];
+        let allPlayerProps = [];
+        let teams = [];
         let userPicks = [];
+        let refreshTimer = null;
+        let propsView = 'iit';
+        let gamePropsCache = new Map();
+        let activeGamePropsId = null;
 
-        const API_URL = '/api';
+        const FALLBACK_DATA = {
+            upcomingGames: [
+                {
+                    id: 1,
+                    home_team_name: 'Illinois Tech',
+                    away_team_name: 'DePauw University',
+                    home_record: '0-4',
+                    away_record: '2-2',
+                    home_abbrev: 'IIT',
+                    away_abbrev: 'DEP',
+                    game_date: '2026-03-07',
+                    game_time: '2:00 PM',
+                    home_moneyline: 180,
+                    away_moneyline: -210,
+                    spread_line: 2.5,
+                    total_line: 16.5,
+                    home_win_prob: 35,
+                    away_win_prob: 65
+                },
+                {
+                    id: 2,
+                    home_team_name: 'Hope College',
+                    away_team_name: 'Illinois Tech',
+                    home_record: '3-1',
+                    away_record: '0-4',
+                    home_abbrev: 'HOP',
+                    away_abbrev: 'IIT',
+                    game_date: '2026-03-11',
+                    game_time: '6:00 PM',
+                    home_moneyline: -300,
+                    away_moneyline: 240,
+                    spread_line: -4.5,
+                    total_line: 17.5,
+                    home_win_prob: 72,
+                    away_win_prob: 28
+                }
+            ],
+            completedGames: [
+                {
+                    id: 101,
+                    home_team_name: 'Kalamazoo College',
+                    away_team_name: 'Illinois Tech',
+                    home_record: '2-1',
+                    away_record: '0-4',
+                    game_date: '2026-02-28',
+                    home_score: 10,
+                    away_score: 9,
+                    home_moneyline: -145,
+                    away_moneyline: 125,
+                    spread_line: -1.5,
+                    total_line: 18.5
+                }
+            ],
+            playerProps: [
+                {
+                    id: 1001,
+                    game_id: 1,
+                    player_id: 501,
+                    game_date: '2026-03-07',
+                    game_time: '2:00 PM',
+                    home_team_name: 'Illinois Tech',
+                    away_team_name: 'DePauw University',
+                    team_name: 'Illinois Tech',
+                    player_name: 'Luke Chapman',
+                    prop_type: 'Goals',
+                    line: 1.5,
+                    over_odds: -115,
+                    under_odds: -105
+                },
+                {
+                    id: 1002,
+                    game_id: 1,
+                    player_id: 502,
+                    game_date: '2026-03-07',
+                    game_time: '2:00 PM',
+                    home_team_name: 'Illinois Tech',
+                    away_team_name: 'DePauw University',
+                    team_name: 'Illinois Tech',
+                    player_name: 'Ryan Littler',
+                    prop_type: 'Saves',
+                    line: 11.5,
+                    over_odds: -110,
+                    under_odds: -110
+                },
+                {
+                    id: 1003,
+                    game_id: 2,
+                    player_id: 503,
+                    game_date: '2026-03-11',
+                    game_time: '6:00 PM',
+                    home_team_name: 'Hope College',
+                    away_team_name: 'Illinois Tech',
+                    team_name: 'Illinois Tech',
+                    player_name: 'Bodey Goertzen',
+                    prop_type: 'Points',
+                    line: 2.5,
+                    over_odds: 105,
+                    under_odds: -125
+                }
+            ],
+            teams: [
+                { name: 'Illinois Tech', record: '0-4', goals_per_game: 7.0, goals_allowed_per_game: 9.8, faceoff_pct: 0.57, clear_pct: 0.691, save_pct: 0.658 },
+                { name: 'DePauw University', record: '2-2', goals_per_game: 11.2, goals_allowed_per_game: 8.3, faceoff_pct: 0.54, clear_pct: 0.82, save_pct: 0.59 },
+                { name: 'Hope College', record: '3-1', goals_per_game: 12.0, goals_allowed_per_game: 7.5, faceoff_pct: 0.61, clear_pct: 0.79, save_pct: 0.64 }
+            ]
+        };
 
-        // ==========================================
-        // API HELPERS
-        // ==========================================
+        function unique(values) {
+            return [...new Set(values.filter(Boolean))];
+        }
+
+        function asNumber(value) {
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : null;
+        }
+
+        function roundToHalf(value) {
+            return Math.round(value * 2) / 2;
+        }
+
+        function formatOdds(odds) {
+            const value = asNumber(odds);
+            if (value === null) return '--';
+            return value > 0 ? `+${value}` : `${value}`;
+        }
+
+        function formatDecimal(value, digits = 1) {
+            const parsed = asNumber(value);
+            return parsed === null ? '--' : parsed.toFixed(digits);
+        }
+
+        function formatPercent(value, digits = 1) {
+            const parsed = asNumber(value);
+            if (parsed === null) return '--';
+            const percentage = parsed <= 1 ? parsed * 100 : parsed;
+            return `${percentage.toFixed(digits)}%`;
+        }
+
+        function extractDateParts(dateInput) {
+            if (!dateInput) return null;
+
+            const stringValue = String(dateInput).trim();
+            const match = stringValue.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (match) {
+                return match.slice(1).map(Number);
+            }
+
+            const parsed = new Date(stringValue);
+            if (Number.isNaN(parsed.getTime())) {
+                return null;
+            }
+
+            return [parsed.getFullYear(), parsed.getMonth() + 1, parsed.getDate()];
+        }
+
+        function formatDateLabel(dateString) {
+            const parts = extractDateParts(dateString);
+            if (!parts) return dateString ? String(dateString) : 'TBD';
+
+            const [year, month, day] = parts;
+            return new Date(year, month - 1, day).toLocaleDateString([], { month: 'short', day: 'numeric' });
+        }
+
+        function formatDateTime(dateString, timeString) {
+            return `${formatDateLabel(dateString)}${timeString ? ` • ${timeString}` : ''}`;
+        }
+
+        function formatTimeLabel(timestamp) {
+            const parsed = new Date(timestamp);
+            return Number.isNaN(parsed.getTime())
+                ? '--:--'
+                : parsed.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        }
+
+        function formatSpreadLabel(line) {
+            const parsed = asNumber(line);
+            if (parsed === null) return '--';
+            return `${parsed > 0 ? '+' : ''}${parsed.toFixed(1)}`;
+        }
+
+        function americanToProbability(odds) {
+            const value = asNumber(odds);
+            if (value === null || value === 0) return null;
+
+            if (value < 0) {
+                return Math.abs(value) / (Math.abs(value) + 100);
+            }
+
+            return 100 / (value + 100);
+        }
+
+        function calculateSpreadMagnitudeFromProbability(probability, totalLine) {
+            const favoriteProbability = Math.min(0.99, Math.max(0.5, probability || 0.5));
+            const probabilityEdge = Math.abs(favoriteProbability - 0.5);
+            const probabilitySpread = roundToHalf(Math.max(0.5, probabilityEdge * 14));
+            const totalCap = totalLine !== null
+                ? Math.max(1.5, roundToHalf(totalLine * 0.35))
+                : 6.0;
+
+            return Math.min(totalCap, probabilitySpread);
+        }
+
+        function normalizeSpreadLine(game) {
+            const homeMoneyline = asNumber(game.home_moneyline);
+            const awayMoneyline = asNumber(game.away_moneyline);
+            const rawSpread = Math.abs(asNumber(game.spread_line) ?? 0);
+            const totalLine = asNumber(game.total_line);
+            const fallbackHomeProb = Math.min(0.99, Math.max(0.01, (asNumber(game.home_win_prob) ?? 50) / 100));
+            const homeProbability = americanToProbability(homeMoneyline) ?? fallbackHomeProb;
+            const awayProbability = americanToProbability(awayMoneyline) ?? (1 - fallbackHomeProb);
+            const homeIsFavorite = homeProbability >= awayProbability;
+            const favoriteProbability = Math.max(homeProbability, awayProbability);
+            const probabilitySpread = calculateSpreadMagnitudeFromProbability(favoriteProbability, totalLine);
+            const spreadMagnitude = roundToHalf((probabilitySpread * 0.8) + (Math.min(probabilitySpread, rawSpread || probabilitySpread) * 0.2));
+
+            return homeIsFavorite ? -spreadMagnitude : spreadMagnitude;
+        }
+
+        function formatPropLine(prop) {
+            if ((prop.prop_type || '').includes('%')) {
+                return `${formatDecimal(prop.line, 1)}%`;
+            }
+            return formatDecimal(prop.line, 1);
+        }
+
+        function isIllinoisTechTeam(name) {
+            return String(name || '').toLowerCase().includes('illinois tech');
+        }
+
+        function isIllinoisTechProp(prop) {
+            return isIllinoisTechTeam(prop?.team_name);
+        }
+
+        function getPropViewLabel(view = propsView) {
+            return view === 'all' ? 'all tracked player props' : 'Illinois Tech player props';
+        }
+
+        function getFilteredPlayerProps(view = propsView) {
+            const props = [...allPlayerProps];
+            return view === 'all' ? props : props.filter(isIllinoisTechProp);
+        }
+
+        function getGameProps(gameId, view = propsView) {
+            const gameKey = String(gameId);
+            const cachedProps = gamePropsCache.get(gameKey);
+            const source = cachedProps && cachedProps.length ? cachedProps : allPlayerProps.filter(prop => String(prop.game_id) === gameKey);
+            return view === 'all' ? source : source.filter(isIllinoisTechProp);
+        }
+
+        function groupPropsByGame(props) {
+            const groupedProps = new Map();
+
+            props.forEach(prop => {
+                const key = `${prop.game_id}-${prop.game_date}-${prop.home_team_name}-${prop.away_team_name}`;
+                if (!groupedProps.has(key)) {
+                    groupedProps.set(key, {
+                        game_id: prop.game_id,
+                        game_date: prop.game_date,
+                        game_time: prop.game_time,
+                        home_team_name: prop.home_team_name,
+                        away_team_name: prop.away_team_name,
+                        props: []
+                    });
+                }
+                groupedProps.get(key).props.push(prop);
+            });
+
+            return Array.from(groupedProps.values());
+        }
+
+        function groupPropsByPlayer(props) {
+            const grouped = new Map();
+
+            props.forEach(prop => {
+                const key = `${prop.player_id || prop.player_name}-${prop.team_name || ''}`;
+                if (!grouped.has(key)) {
+                    grouped.set(key, {
+                        player_name: prop.player_name,
+                        player_number: prop.player_number,
+                        position: prop.position,
+                        team_name: prop.team_name,
+                        props: []
+                    });
+                }
+                grouped.get(key).props.push(prop);
+            });
+
+            return Array.from(grouped.values()).map(player => ({
+                ...player,
+                props: player.props.sort((left, right) => String(left.prop_type).localeCompare(String(right.prop_type)))
+            }));
+        }
+
+        function renderPlayerPropGroups(props) {
+            const groupedPlayers = groupPropsByPlayer(props);
+
+            if (groupedPlayers.length === 0) {
+                return '<p class="empty-state">No player props available for this view yet.</p>';
+            }
+
+            return `
+                <div class="player-props-stack">
+                    ${groupedPlayers.map(player => `
+                        <div class="player-prop-card">
+                            <div class="player-prop-header">
+                                <div>
+                                    <div class="player-name">${player.player_name}</div>
+                                    <div class="player-meta">
+                                        ${player.team_name || 'Team'}
+                                        ${player.position ? ` • ${player.position}` : ''}
+                                        ${player.player_number ? ` • #${player.player_number}` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="player-prop-lines">
+                                ${player.props.map(prop => `
+                                    <div class="player-prop-line">
+                                        <div class="player-prop-market">${prop.prop_type}</div>
+                                        <div class="player-prop-odds">
+                                            <span class="prop-pill">Line ${formatPropLine(prop)}</span>
+                                            <button class="${buildPropPickButtonClass(prop.id, 'over', prop.over_odds, 'tone-positive')}"
+                                                    onclick="makePropPick(${prop.id}, 'over', ${asNumber(prop.over_odds) ?? -110})">
+                                                Over ${formatOdds(prop.over_odds)}
+                                            </button>
+                                            <button class="${buildPropPickButtonClass(prop.id, 'under', prop.under_odds, 'tone-negative')}"
+                                                    onclick="makePropPick(${prop.id}, 'under', ${asNumber(prop.under_odds) ?? -110})">
+                                                Under ${formatOdds(prop.under_odds)}
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function getOddToneClass(pickType, side, referenceValue) {
+            if (pickType === 'total') {
+                return side === 'over' ? 'tone-positive' : 'tone-negative';
+            }
+
+            const numericValue = asNumber(referenceValue);
+            if (numericValue !== null) {
+                return numericValue > 0 ? 'tone-positive' : 'tone-negative';
+            }
+
+            return side === 'home' ? 'tone-positive' : 'tone-negative';
+        }
+
+        function normalizeApiBaseUrl(input) {
+            if (!input) return null;
+            const trimmed = String(input).trim().replace(/\/+$/, '');
+            if (!/^https?:\/\//i.test(trimmed)) return null;
+            return trimmed.endsWith('/api') ? trimmed : `${trimmed}/api`;
+        }
+
+        function getApiCandidates() {
+            const params = new URLSearchParams(window.location.search);
+            const queryApi = normalizeApiBaseUrl(params.get('api'));
+            const configuredApi = normalizeApiBaseUrl(window.LAX_ODDS_API_URL);
+            const storedApi = normalizeApiBaseUrl(localStorage.getItem('preferredApiBaseUrl'));
+            const sameOriginApi = window.location.protocol !== 'file:' && window.location.origin !== 'null'
+                ? normalizeApiBaseUrl(window.location.origin)
+                : null;
+
+            if (queryApi) {
+                localStorage.setItem('preferredApiBaseUrl', queryApi);
+            }
+
+            return unique([
+                queryApi,
+                configuredApi,
+                storedApi,
+                sameOriginApi,
+                'http://localhost:3000/api'
+            ]);
+        }
+
+        async function fetchWithTimeout(url, options = {}, timeoutMs = 8000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+            try {
+                return await fetch(url, { ...options, signal: controller.signal });
+            } finally {
+                clearTimeout(timeout);
+            }
+        }
+
+        function parseJsonSafely(text) {
+            if (!text) return null;
+
+            try {
+                return JSON.parse(text);
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function setApiStatus(mode, message) {
+            const statusEl = document.getElementById('apiStatus');
+            const noteEl = document.getElementById('apiNote');
+
+            statusEl.className = `api-status ${mode}`;
+            statusEl.textContent = mode === 'live'
+                ? 'Live API'
+                : mode === 'demo'
+                    ? 'Demo Data'
+                    : mode === 'offline'
+                        ? 'Offline'
+                        : 'Connecting';
+            noteEl.textContent = message;
+        }
+
         const api = {
             token: localStorage.getItem('token'),
+            baseUrl: undefined,
+            initPromise: null,
 
             setToken(token) {
                 this.token = token;
@@ -562,35 +1199,95 @@
                 }
             },
 
+            async ensureBaseUrl() {
+                if (this.baseUrl !== undefined) {
+                    return this.baseUrl;
+                }
+
+                if (!this.initPromise) {
+                    this.initPromise = (async () => {
+                        setApiStatus('connecting', 'Looking for a live API…');
+
+                        for (const candidate of getApiCandidates()) {
+                            try {
+                                const response = await fetchWithTimeout(`${candidate}/stats`, {
+                                    headers: { 'Accept': 'application/json' }
+                                }, 4000);
+
+                                if (!response.ok) {
+                                    continue;
+                                }
+
+                                const payload = parseJsonSafely(await response.text());
+                                if (payload) {
+                                    this.baseUrl = candidate;
+                                    localStorage.setItem('preferredApiBaseUrl', candidate);
+                                    setApiStatus('live', `Connected to ${candidate}`);
+                                    return candidate;
+                                }
+                            } catch (error) {
+                                continue;
+                            }
+                        }
+
+                        this.baseUrl = null;
+                        setApiStatus('demo', 'Live API unavailable. Showing demo data. Add `?api=https://your-backend/api` or run the backend on localhost:3000.');
+                        return null;
+                    })();
+                }
+
+                return this.initPromise;
+            },
+
             async request(endpoint, options = {}) {
+                const baseUrl = await this.ensureBaseUrl();
+                if (!baseUrl) {
+                    throw new Error('API unavailable');
+                }
+
                 const headers = {
                     'Content-Type': 'application/json',
-                    ...(this.token && { 'Authorization': `Bearer ${this.token}` })
+                    ...(this.token ? { 'Authorization': `Bearer ${this.token}` } : {}),
+                    ...(options.headers || {})
                 };
 
-                const response = await fetch(`${API_URL}${endpoint}`, {
+                const response = await fetchWithTimeout(`${baseUrl}${endpoint}`, {
                     ...options,
-                    headers: { ...headers, ...options.headers }
-                });
+                    headers
+                }, 12000);
 
-                const data = await response.json();
+                const text = await response.text();
+                const data = parseJsonSafely(text);
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Request failed');
+                    throw new Error(data?.error || 'Request failed');
                 }
 
                 return data;
             },
 
-            get: (endpoint) => api.request(endpoint),
-            post: (endpoint, body) => api.request(endpoint, { method: 'POST', body: JSON.stringify(body) }),
-            delete: (endpoint) => api.request(endpoint, { method: 'DELETE' })
+            get(endpoint) {
+                return this.request(endpoint);
+            },
+
+            post(endpoint, body) {
+                return this.request(endpoint, {
+                    method: 'POST',
+                    body: JSON.stringify(body)
+                });
+            },
+
+            delete(endpoint) {
+                return this.request(endpoint, { method: 'DELETE' });
+            }
         };
 
-        // ==========================================
-        // AUTH
-        // ==========================================
         function showModal(mode) {
+            if (!api.baseUrl) {
+                toast('Login and synced picks require a running backend API', 'error');
+                return;
+            }
+
             authMode = mode;
             document.getElementById('authModal').classList.add('active');
             document.getElementById('modalTitle').textContent = mode === 'login' ? 'Login' : 'Create Account';
@@ -611,37 +1308,47 @@
             showModal(authMode === 'login' ? 'register' : 'login');
         }
 
-        document.getElementById('authForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        document.getElementById('authForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('passwordInput').value;
             const username = document.getElementById('usernameInput').value;
 
             try {
                 const endpoint = authMode === 'login' ? '/auth/login' : '/auth/register';
-                const body = authMode === 'login' 
+                const body = authMode === 'login'
                     ? { email, password }
                     : { email, password, username };
-
                 const data = await api.post(endpoint, body);
-                
+
                 api.setToken(data.token);
                 currentUser = data.user;
                 updateAuthUI();
                 hideModal();
                 toast(`Welcome${authMode === 'login' ? ' back' : ''}, ${currentUser.username}!`, 'success');
-                loadUserPicks();
+                await loadUserPicks();
             } catch (error) {
                 document.getElementById('authError').textContent = error.message;
                 document.getElementById('authError').classList.add('show');
             }
         });
 
-        function logout() {
+        async function logout() {
+            if (api.baseUrl) {
+                try {
+                    await api.post('/auth/logout', {});
+                } catch (error) {
+                    // Ignore logout transport errors and clear local auth state anyway.
+                }
+            }
+
             api.setToken(null);
             currentUser = null;
             userPicks = [];
             updateAuthUI();
+            renderUserPicks();
+            renderGames();
+            renderPlayerProps();
             toast('Logged out', 'success');
         }
 
@@ -663,135 +1370,97 @@
         }
 
         async function checkAuth() {
-            if (api.token) {
-                try {
-                    const data = await api.get('/auth/me');
-                    currentUser = data.user;
-                    updateAuthUI();
-                    loadUserPicks();
-                } catch (error) {
-                    api.setToken(null);
-                }
-            }
-        }
+            if (!api.token) return;
 
-        // ==========================================
-        // GAMES & ODDS
-        // ==========================================
-        async function loadGames() {
-            try {
-                games = await api.get('/games?upcoming=true');
-                renderGames();
-                document.getElementById('gamesLoading').style.display = 'none';
-            } catch (error) {
-                console.error('Failed to load games:', error);
-                // Fall back to sample data if API fails
-                renderSampleGames();
-            }
-        }
-
-        function renderGames() {
-            const grid = document.getElementById('gamesGrid');
-            
-            if (games.length === 0) {
-                grid.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">No upcoming games found</p>';
+            const baseUrl = await api.ensureBaseUrl();
+            if (!baseUrl) {
+                api.setToken(null);
                 return;
             }
 
-            grid.innerHTML = games.map((game, index) => {
-                const isFirst = index === 0;
-                return `
-                    <div class="game-card ${isFirst ? 'featured' : ''}">
-                        <div class="game-header">
-                            <div class="game-teams">
-                                <div>
-                                    <div class="team-name" style="color: ${game.home_team_name?.includes('Illinois Tech') ? 'var(--scarlet)' : 'inherit'}">
-                                        ${game.home_team_name || 'Home'}
-                                    </div>
-                                    <div class="team-record">${game.home_record || '0-0'}</div>
-                                </div>
-                                <div class="game-vs">VS</div>
-                                <div>
-                                    <div class="team-name">${game.away_team_name || 'Away'}</div>
-                                    <div class="team-record">${game.away_record || '0-0'}</div>
-                                </div>
-                            </div>
-                            <div class="game-date">
-                                <div>${new Date(game.game_date).toLocaleDateString()}</div>
-                                <div style="color: var(--text-muted)">${game.game_time || ''}</div>
-                            </div>
-                        </div>
-                        <div class="game-body">
-                            <div class="odds-row">
-                                <div class="odds-type">Moneyline</div>
-                                <div class="odds-values">
-                                    <button class="odd-btn ${game.home_moneyline < 0 ? 'favorite' : 'underdog'}" 
-                                            onclick="makePick(${game.id}, 'moneyline', 'home', ${game.home_moneyline})">
-                                        ${game.home_abbrev || 'H'} ${formatOdds(game.home_moneyline)}
-                                    </button>
-                                    <button class="odd-btn ${game.away_moneyline < 0 ? 'favorite' : 'underdog'}"
-                                            onclick="makePick(${game.id}, 'moneyline', 'away', ${game.away_moneyline})">
-                                        ${game.away_abbrev || 'A'} ${formatOdds(game.away_moneyline)}
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="odds-row">
-                                <div class="odds-type">Spread</div>
-                                <div class="odds-values">
-                                    <button class="odd-btn" onclick="makePick(${game.id}, 'spread', 'home', -110)">
-                                        ${game.spread_line >= 0 ? '+' : ''}${game.spread_line} (-110)
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="odds-row">
-                                <div class="odds-type">Total</div>
-                                <div class="odds-values">
-                                    <button class="odd-btn" onclick="makePick(${game.id}, 'total', 'over', -110)">
-                                        O ${game.total_line}
-                                    </button>
-                                    <button class="odd-btn" onclick="makePick(${game.id}, 'total', 'under', -110)">
-                                        U ${game.total_line}
-                                    </button>
-                                </div>
-                            </div>
-                            ${game.home_win_prob ? `
-                                <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
-                                    <div style="height: 6px; background: var(--bg-dark); border-radius: 3px; overflow: hidden;">
-                                        <div style="width: ${game.home_win_prob}%; height: 100%; background: linear-gradient(90deg, var(--scarlet), var(--accent-gold));"></div>
-                                    </div>
-                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
-                                        <span>Win: ${game.home_win_prob}%</span>
-                                        <span>${game.away_win_prob}%</span>
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            document.getElementById('upcomingCount').textContent = games.length;
-            document.getElementById('gamesLoading').style.display = 'none';
+            try {
+                const data = await api.get('/auth/me');
+                currentUser = data.user;
+                updateAuthUI();
+                await loadUserPicks();
+            } catch (error) {
+                api.setToken(null);
+            }
         }
 
-        function renderSampleGames() {
-            // Sample data fallback
-            games = [
-                { id: 1, home_team_name: 'Illinois Tech', away_team_name: 'DePauw', home_record: '0-4', away_record: '2-2', game_date: '2026-03-07', game_time: '2:00 PM', home_moneyline: 180, away_moneyline: -210, spread_line: 2.5, total_line: 16.5, home_win_prob: 35, away_win_prob: 65 },
-                { id: 2, home_team_name: 'Hope', away_team_name: 'Illinois Tech', home_record: '3-1', away_record: '0-4', game_date: '2026-03-11', game_time: '6:00 PM', home_moneyline: -300, away_moneyline: 240, spread_line: -4.5, total_line: 17.5, home_win_prob: 72, away_win_prob: 28 },
-            ];
-            renderGames();
+        function findGamePick(gameId, pickType) {
+            return userPicks.find(pick => {
+                return pick.pick_scope === 'game'
+                    && String(pick.game_id) === String(gameId)
+                    && pick.pick_type === pickType;
+            });
         }
 
-        function formatOdds(odds) {
-            if (!odds) return '--';
-            return odds > 0 ? `+${odds}` : odds;
+        function findPropPick(propId) {
+            return userPicks.find(pick => {
+                return pick.pick_scope === 'prop'
+                    && String(pick.prop_id) === String(propId);
+            });
         }
 
-        // ==========================================
-        // PICKS
-        // ==========================================
+        function isPickSelected(gameId, pickType, pickValue) {
+            const pick = findGamePick(gameId, pickType);
+            return Boolean(pick && String(pick.pick_value) === String(pickValue));
+        }
+
+        function isPropPickSelected(propId, pickDirection) {
+            const pick = findPropPick(propId);
+            return Boolean(pick && String(pick.pick_value) === String(pickDirection));
+        }
+
+        function pickButtonClass(gameId, pickType, pickValue, odds) {
+            const classes = ['odd-btn'];
+            const numericOdds = asNumber(odds);
+
+            if (numericOdds !== null) {
+                classes.push(numericOdds < 0 ? 'favorite' : 'underdog');
+            }
+
+            if (isPickSelected(gameId, pickType, pickValue)) {
+                classes.push('selected');
+            }
+
+            return classes.join(' ');
+        }
+
+        function buildPickButtonClass(gameId, pickType, pickValue, odds, toneClass) {
+            const classes = pickButtonClass(gameId, pickType, pickValue, odds).split(' ');
+            if (toneClass) {
+                classes.push(toneClass);
+            }
+            return unique(classes).join(' ');
+        }
+
+        function buildPropPickButtonClass(propId, pickDirection, odds, toneClass) {
+            const classes = ['odd-btn'];
+            const numericOdds = asNumber(odds);
+
+            if (numericOdds !== null) {
+                classes.push(numericOdds < 0 ? 'favorite' : 'underdog');
+            }
+
+            if (isPropPickSelected(propId, pickDirection)) {
+                classes.push('selected');
+            }
+
+            if (toneClass) {
+                classes.push(toneClass);
+            }
+
+            return unique(classes).join(' ');
+        }
+
         async function makePick(gameId, pickType, pickValue, odds) {
+            if (!api.baseUrl) {
+                toast('Pick tracking requires a running backend API', 'error');
+                return;
+            }
+
             if (!currentUser) {
                 showModal('login');
                 toast('Please login to save picks', 'error');
@@ -799,37 +1468,328 @@
             }
 
             try {
-                await api.post('/picks', {
+                const result = await api.post('/picks', {
                     gameId,
                     pickType,
                     pickValue,
-                    oddsAtPick: odds,
+                    oddsAtPick: asNumber(odds) ?? -110,
                     stake: 0
                 });
-                toast('Pick saved!', 'success');
-                loadUserPicks();
+                toast(result.removed ? 'Pick removed' : 'Pick saved', 'success');
+                await loadUserPicks();
+                renderGames();
+            } catch (error) {
+                toast(error.message, 'error');
+            }
+        }
+
+        async function makePropPick(propId, pickDirection, odds) {
+            if (!api.baseUrl) {
+                toast('Pick tracking requires a running backend API', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showModal('login');
+                toast('Please login to save picks', 'error');
+                return;
+            }
+
+            try {
+                const result = await api.post('/prop-picks', {
+                    propId,
+                    pickDirection,
+                    oddsAtPick: asNumber(odds) ?? -110,
+                    stake: 0
+                });
+                toast(result.removed ? 'Prop pick removed' : 'Prop pick saved', 'success');
+                await loadUserPicks();
+                renderPlayerProps();
+                renderGames();
+
+                if (activeGamePropsId !== null) {
+                    await openGamePropsModal(activeGamePropsId);
+                }
             } catch (error) {
                 toast(error.message, 'error');
             }
         }
 
         async function loadUserPicks() {
-            if (!currentUser) return;
+            if (!currentUser || !api.baseUrl) {
+                return;
+            }
 
             try {
                 userPicks = await api.get('/picks');
-                renderUserPicks();
-                document.getElementById('myPicksCount').textContent = userPicks.length;
             } catch (error) {
                 console.error('Failed to load picks:', error);
+                userPicks = [];
             }
+
+            updateAuthUI();
+            renderUserPicks();
+            renderGames();
+            renderPlayerProps();
+        }
+
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            document.getElementById('gamesLoading').style.display = 'none';
+
+            if (games.length === 0) {
+                grid.innerHTML = '<p class="empty-state">No upcoming games found.</p>';
+                return;
+            }
+
+            grid.innerHTML = games.map((game, index) => {
+                const isFirst = index === 0;
+                const homeMoneyline = asNumber(game.home_moneyline);
+                const awayMoneyline = asNumber(game.away_moneyline);
+                const spreadLine = normalizeSpreadLine(game);
+                const totalLine = asNumber(game.total_line);
+                const homeWinProb = asNumber(game.home_win_prob);
+                const awayWinProb = asNumber(game.away_win_prob);
+                const awaySpread = spreadLine !== null ? (spreadLine * -1) : null;
+                const iitPropCount = getGameProps(game.id, 'iit').length;
+
+                return `
+                    <div class="game-card ${isFirst ? 'featured' : ''}">
+                        <div class="game-header">
+                            <div class="game-teams">
+                                <div>
+                                    <div class="team-name" style="color: ${isIllinoisTechTeam(game.home_team_name) ? 'var(--scarlet)' : 'inherit'}">
+                                        ${game.home_team_name || 'Home'}
+                                    </div>
+                                    <div class="team-record">${game.home_record || '0-0'}</div>
+                                </div>
+                                <div class="game-vs">VS</div>
+                                <div>
+                                    <div class="team-name" style="color: ${isIllinoisTechTeam(game.away_team_name) ? 'var(--scarlet)' : 'inherit'}">
+                                        ${game.away_team_name || 'Away'}
+                                    </div>
+                                    <div class="team-record">${game.away_record || '0-0'}</div>
+                                </div>
+                            </div>
+                            <div class="game-date">
+                                <div>${formatDateLabel(game.game_date)}</div>
+                                <div style="color: var(--text-muted)">${game.game_time || ''}</div>
+                            </div>
+                        </div>
+                        <div class="game-body">
+                            <div class="odds-row">
+                                <div class="odds-type">Moneyline</div>
+                                <div class="odds-values">
+                                    <button class="${buildPickButtonClass(game.id, 'moneyline', 'home', homeMoneyline, getOddToneClass('moneyline', 'home', homeMoneyline))}"
+                                            onclick="makePick(${game.id}, 'moneyline', 'home', ${homeMoneyline ?? -110})">
+                                        ${game.home_abbrev || 'HOME'} ${formatOdds(homeMoneyline)}
+                                    </button>
+                                    <button class="${buildPickButtonClass(game.id, 'moneyline', 'away', awayMoneyline, getOddToneClass('moneyline', 'away', awayMoneyline))}"
+                                            onclick="makePick(${game.id}, 'moneyline', 'away', ${awayMoneyline ?? -110})">
+                                        ${game.away_abbrev || 'AWAY'} ${formatOdds(awayMoneyline)}
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="odds-row">
+                                <div class="odds-type">Spread</div>
+                                <div class="odds-values">
+                                    <button class="${buildPickButtonClass(game.id, 'spread', 'home', -110, getOddToneClass('spread', 'home', spreadLine))}"
+                                            onclick="makePick(${game.id}, 'spread', 'home', -110)">
+                                        ${game.home_abbrev || 'HOME'} ${formatSpreadLabel(spreadLine)} (-110)
+                                    </button>
+                                    <button class="${buildPickButtonClass(game.id, 'spread', 'away', -110, getOddToneClass('spread', 'away', awaySpread))}"
+                                            onclick="makePick(${game.id}, 'spread', 'away', -110)">
+                                        ${game.away_abbrev || 'AWAY'} ${formatSpreadLabel(awaySpread)} (-110)
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="odds-row">
+                                <div class="odds-type">Total</div>
+                                <div class="odds-values">
+                                    <button class="${buildPickButtonClass(game.id, 'total', 'over', -110, getOddToneClass('total', 'over'))}"
+                                            onclick="makePick(${game.id}, 'total', 'over', -110)">
+                                        O ${formatDecimal(totalLine, 1)}
+                                    </button>
+                                    <button class="${buildPickButtonClass(game.id, 'total', 'under', -110, getOddToneClass('total', 'under'))}"
+                                            onclick="makePick(${game.id}, 'total', 'under', -110)">
+                                        U ${formatDecimal(totalLine, 1)}
+                                    </button>
+                                </div>
+                            </div>
+                            ${homeWinProb !== null ? `
+                                <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+                                    <div style="height: 6px; background: var(--bg-dark); border-radius: 3px; overflow: hidden;">
+                                        <div style="width: ${homeWinProb}%; height: 100%; background: linear-gradient(90deg, var(--scarlet), var(--accent-gold));"></div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                                        <span>${game.home_team_name || 'Home'} ${formatPercent(homeWinProb)}</span>
+                                        <span>${formatPercent(awayWinProb)}</span>
+                                    </div>
+                                </div>
+                            ` : ''}
+                            <div class="game-actions">
+                                <button class="btn btn-secondary btn-inline" onclick="openGamePropsModal(${game.id})">
+                                    View ${iitPropCount > 0 ? `${iitPropCount} IIT ` : ''}Player Props
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderPlayerProps() {
+            const grid = document.getElementById('propsGrid');
+            const props = getFilteredPlayerProps();
+            const note = document.getElementById('propsNote');
+
+            note.textContent = propsView === 'all'
+                ? 'All tracked player props across upcoming games.'
+                : 'Illinois Tech player props against upcoming opponents.';
+
+            if (props.length === 0) {
+                grid.innerHTML = `<p class="empty-state">No ${getPropViewLabel()} are available yet.</p>`;
+                return;
+            }
+
+            const groupedProps = groupPropsByGame(props);
+
+            grid.innerHTML = groupedProps.map(group => `
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-teams">
+                            <div>
+                                <div class="team-name">${group.home_team_name}</div>
+                                <div class="team-record">${formatDateTime(group.game_date, group.game_time)}</div>
+                            </div>
+                            <div class="game-vs">VS</div>
+                            <div>
+                                <div class="team-name">${group.away_team_name}</div>
+                                <div class="team-record">Player Props</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-body">
+                        ${renderPlayerPropGroups(group.props)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function openGamePropsModal(gameId) {
+            const modal = document.getElementById('gamePropsModal');
+            const content = document.getElementById('gamePropsContent');
+            const game = games.find(item => String(item.id) === String(gameId)) || completedGames.find(item => String(item.id) === String(gameId));
+            activeGamePropsId = gameId;
+
+            document.getElementById('gamePropsMatchup').textContent = game
+                ? `${game.away_team_name} at ${game.home_team_name}`
+                : 'Game Props';
+            document.getElementById('gamePropsMeta').textContent = game
+                ? formatDateTime(game.game_date, game.game_time)
+                : 'Upcoming matchup';
+            document.getElementById('gamePropsNote').textContent = 'Showing Illinois Tech player props for this matchup.';
+
+            content.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Loading player props...
+                </div>
+            `;
+            modal.classList.add('active');
+
+            let props = getGameProps(gameId, 'iit');
+
+            if (props.length === 0 && api.baseUrl) {
+                try {
+                    const fetchedProps = await api.get(`/games/${gameId}/props`);
+                    const enrichedProps = fetchedProps.map(prop => ({
+                        ...prop,
+                        home_team_name: prop.home_team_name || game?.home_team_name,
+                        away_team_name: prop.away_team_name || game?.away_team_name,
+                        game_date: prop.game_date || game?.game_date,
+                        game_time: prop.game_time || game?.game_time
+                    }));
+                    gamePropsCache.set(String(gameId), enrichedProps);
+                    props = enrichedProps.filter(isIllinoisTechProp);
+                } catch (error) {
+                    content.innerHTML = '<p class="empty-state">Failed to load props for this game.</p>';
+                    return;
+                }
+            }
+
+            if (props.length === 0) {
+                content.innerHTML = '<p class="empty-state">No Illinois Tech props are available for this matchup yet.</p>';
+                return;
+            }
+
+            content.innerHTML = renderPlayerPropGroups(props);
+        }
+
+        function closeGamePropsModal() {
+            activeGamePropsId = null;
+            document.getElementById('gamePropsModal').classList.remove('active');
+        }
+
+        function renderCompletedGames() {
+            const grid = document.getElementById('resultsGrid');
+
+            if (completedGames.length === 0) {
+                grid.innerHTML = '<p class="empty-state">No completed games found.</p>';
+                return;
+            }
+
+            grid.innerHTML = completedGames.map(game => `
+                <div class="game-card">
+                    <div class="game-header">
+                        <div class="game-teams">
+                            <div>
+                                <div class="team-name" style="color: ${isIllinoisTechTeam(game.home_team_name) ? 'var(--scarlet)' : 'inherit'}">
+                                    ${game.home_team_name}
+                                </div>
+                                <div class="team-record">Home</div>
+                            </div>
+                            <div class="game-vs">FINAL</div>
+                            <div>
+                                <div class="team-name" style="color: ${isIllinoisTechTeam(game.away_team_name) ? 'var(--scarlet)' : 'inherit'}">
+                                    ${game.away_team_name}
+                                </div>
+                                <div class="team-record">Away</div>
+                            </div>
+                        </div>
+                        <div class="game-date">${formatDateLabel(game.game_date)}</div>
+                    </div>
+                    <div class="game-body">
+                        <div class="result-score">${game.home_score ?? '-'} - ${game.away_score ?? '-'}</div>
+                        <div class="result-meta" style="margin-bottom: 1rem;">
+                            Closing line: ${formatOdds(game.home_moneyline)} / ${formatOdds(game.away_moneyline)} • Total ${formatDecimal(game.total_line, 1)}
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Winner</div>
+                            <div style="font-weight: 600;">
+                                ${(game.home_score ?? 0) > (game.away_score ?? 0) ? game.home_team_name : game.away_team_name}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderUserPicks() {
             const container = document.getElementById('picksContent');
 
+            if (!api.baseUrl) {
+                container.innerHTML = '<p class="empty-state">Start the backend API to enable login and synced pick tracking.</p>';
+                return;
+            }
+
+            if (!currentUser) {
+                container.innerHTML = '<p class="empty-state">Login to save and track your picks across devices.</p>';
+                return;
+            }
+
             if (userPicks.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 2rem;">No picks yet. Click on odds to make a pick!</p>';
+                container.innerHTML = '<p class="empty-state">No picks yet. Click an odds button to save one.</p>';
                 return;
             }
 
@@ -838,10 +1798,12 @@
                     ${userPicks.map(pick => `
                         <div class="pick-card">
                             <div class="pick-info">
-                                <h4>${pick.home_team} vs ${pick.away_team}</h4>
-                                <p>${pick.pick_type.toUpperCase()}: ${pick.pick_value}</p>
+                                <h4>${pick.pick_scope === 'prop' ? `${pick.player_name} • ${pick.prop_type}` : `${pick.home_team} vs ${pick.away_team}`}</h4>
+                                <p>${pick.pick_scope === 'prop'
+                                    ? `${pick.team_name} • ${String(pick.pick_value).toUpperCase()} ${formatPropLine(pick)} • ${pick.home_team} vs ${pick.away_team}`
+                                    : `${pick.pick_type.toUpperCase()}: ${String(pick.pick_value).toUpperCase()}`}</p>
                             </div>
-                            <div class="pick-odds ${pick.odds_at_pick > 0 ? 'underdog' : 'favorite'}" style="color: ${pick.odds_at_pick > 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">
+                            <div class="pick-odds ${asNumber(pick.odds_at_pick) > 0 ? 'underdog' : 'favorite'}" style="color: ${asNumber(pick.odds_at_pick) > 0 ? 'var(--accent-green)' : 'var(--accent-red)'}">
                                 ${formatOdds(pick.odds_at_pick)}
                             </div>
                             <span class="pick-status ${pick.result || 'pending'}">${pick.result || 'Pending'}</span>
@@ -851,24 +1813,18 @@
             `;
         }
 
-        // ==========================================
-        // TEAMS
-        // ==========================================
-        async function loadTeams() {
-            try {
-                const teams = await api.get('/teams');
-                renderTeams(teams);
-            } catch (error) {
-                console.error('Failed to load teams:', error);
-            }
-        }
-
-        function renderTeams(teams) {
+        function renderTeams() {
             const grid = document.getElementById('teamsGrid');
+
+            if (teams.length === 0) {
+                grid.innerHTML = '<p class="empty-state">No team data available.</p>';
+                return;
+            }
+
             grid.innerHTML = teams.map(team => `
                 <div class="game-card">
                     <div class="game-header">
-                        <div class="team-name" style="color: ${team.name.includes('Illinois Tech') ? 'var(--scarlet)' : 'inherit'}">
+                        <div class="team-name" style="color: ${isIllinoisTechTeam(team.name) ? 'var(--scarlet)' : 'inherit'}">
                             ${team.name}
                         </div>
                         <div class="team-record">${team.record || '0-0'}</div>
@@ -876,71 +1832,196 @@
                     <div class="game-body">
                         <div class="odds-row">
                             <div class="odds-type">Goals/Game</div>
-                            <div style="font-family: 'JetBrains Mono', monospace;">${team.goals_per_game?.toFixed(1) || '--'}</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${formatDecimal(team.goals_per_game, 1)}</div>
                         </div>
                         <div class="odds-row">
                             <div class="odds-type">Goals Allowed</div>
-                            <div style="font-family: 'JetBrains Mono', monospace;">${team.goals_allowed_per_game?.toFixed(1) || '--'}</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${formatDecimal(team.goals_allowed_per_game, 1)}</div>
                         </div>
                         <div class="odds-row">
                             <div class="odds-type">Faceoff %</div>
-                            <div style="font-family: 'JetBrains Mono', monospace;">${team.faceoff_pct ? (team.faceoff_pct * 100).toFixed(1) + '%' : '--'}</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${formatPercent(team.faceoff_pct)}</div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Clear %</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${formatPercent(team.clear_pct)}</div>
+                        </div>
+                        <div class="odds-row">
+                            <div class="odds-type">Save %</div>
+                            <div style="font-family: 'JetBrains Mono', monospace;">${formatPercent(team.save_pct)}</div>
                         </div>
                     </div>
                 </div>
             `).join('');
-
-            document.getElementById('teamCount').textContent = teams.length;
         }
 
-        // ==========================================
-        // STATS
-        // ==========================================
-        async function loadStats() {
-            try {
-                const stats = await api.get('/stats');
-                document.getElementById('upcomingCount').textContent = stats.upcoming_games || 0;
-                document.getElementById('teamCount').textContent = stats.teams || 0;
-                if (stats.last_scrape) {
-                    document.getElementById('lastUpdate').textContent = new Date(stats.last_scrape).toLocaleTimeString();
-                }
-            } catch (error) {
-                console.error('Failed to load stats:', error);
+        function applyStats(stats, isDemo = false) {
+            document.getElementById('upcomingCount').textContent = stats?.upcoming_games ?? games.length;
+            document.getElementById('teamCount').textContent = stats?.teams ?? teams.length;
+            document.getElementById('myPicksCount').textContent = userPicks.length;
+
+            if (isDemo) {
+                document.getElementById('lastUpdate').textContent = 'Demo';
+                return;
             }
+
+            const lastUpdated = stats?.last_odds_update || stats?.last_scrape;
+            document.getElementById('lastUpdate').textContent = lastUpdated ? formatTimeLabel(lastUpdated) : '--:--';
         }
 
-        // ==========================================
-        // TABS
-        // ==========================================
+        function useDemoData() {
+            games = [...FALLBACK_DATA.upcomingGames];
+            completedGames = [...FALLBACK_DATA.completedGames];
+            allPlayerProps = [...FALLBACK_DATA.playerProps];
+            gamePropsCache = new Map();
+            teams = [...FALLBACK_DATA.teams];
+
+            renderGames();
+            renderCompletedGames();
+            renderPlayerProps();
+            renderTeams();
+            renderUserPicks();
+            applyStats(null, true);
+            updateAuthUI();
+        }
+
+        async function loadLiveData(allowDemoFallback = true) {
+            const baseUrl = await api.ensureBaseUrl();
+            if (!baseUrl) {
+                if (allowDemoFallback) {
+                    useDemoData();
+                }
+                return false;
+            }
+
+            const results = await Promise.allSettled([
+                api.get('/games?upcoming=true'),
+                api.get('/games?completed=true'),
+                api.get('/props?upcoming=true'),
+                api.get('/teams'),
+                api.get('/stats')
+            ]);
+
+            const [upcomingResult, completedResult, propsResult, teamsResult, statsResult] = results;
+            let anyLiveData = false;
+
+            if (upcomingResult.status === 'fulfilled') {
+                games = upcomingResult.value || [];
+                renderGames();
+                anyLiveData = true;
+            } else {
+                games = games.length && !allowDemoFallback ? games : [];
+                renderGames();
+            }
+
+            if (completedResult.status === 'fulfilled') {
+                completedGames = completedResult.value || [];
+                renderCompletedGames();
+                anyLiveData = true;
+            } else {
+                completedGames = completedGames.length && !allowDemoFallback ? completedGames : [];
+                renderCompletedGames();
+            }
+
+            if (propsResult.status === 'fulfilled') {
+                allPlayerProps = propsResult.value || [];
+                gamePropsCache = new Map();
+                renderGames();
+                renderPlayerProps();
+                anyLiveData = true;
+            } else {
+                allPlayerProps = allPlayerProps.length && !allowDemoFallback ? allPlayerProps : [];
+                renderPlayerProps();
+            }
+
+            if (teamsResult.status === 'fulfilled') {
+                teams = teamsResult.value || [];
+                renderTeams();
+                anyLiveData = true;
+            } else {
+                teams = teams.length && !allowDemoFallback ? teams : [];
+                renderTeams();
+            }
+
+            if (statsResult.status === 'fulfilled') {
+                applyStats(statsResult.value);
+                anyLiveData = true;
+            } else {
+                applyStats();
+            }
+
+            renderUserPicks();
+
+            if (!anyLiveData && allowDemoFallback) {
+                setApiStatus('offline', 'The backend API was detected earlier, but current requests failed. Showing demo data instead.');
+                useDemoData();
+                return false;
+            }
+
+            return anyLiveData;
+        }
+
+        function startAutoRefresh() {
+            if (refreshTimer) {
+                clearInterval(refreshTimer);
+            }
+
+            if (!api.baseUrl) {
+                return;
+            }
+
+            refreshTimer = setInterval(async () => {
+                const live = await loadLiveData(false);
+                if (live && currentUser) {
+                    await loadUserPicks();
+                }
+            }, 60000);
+        }
+
         document.querySelectorAll('.tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                document.querySelectorAll('.tab').forEach(item => item.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
                 tab.classList.add('active');
                 document.getElementById(`${tab.dataset.tab}-section`).classList.add('active');
             });
         });
 
-        // ==========================================
-        // TOAST
-        // ==========================================
+        document.querySelectorAll('[data-props-view]').forEach(button => {
+            button.addEventListener('click', () => {
+                propsView = button.dataset.propsView;
+                document.querySelectorAll('[data-props-view]').forEach(item => item.classList.remove('active'));
+                button.classList.add('active');
+                renderPlayerProps();
+            });
+        });
+
         function toast(message, type = 'success') {
             const container = document.getElementById('toastContainer');
-            const t = document.createElement('div');
-            t.className = `toast ${type}`;
-            t.textContent = message;
-            container.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
+            const toastEl = document.createElement('div');
+            toastEl.className = `toast ${type}`;
+            toastEl.textContent = message;
+            container.appendChild(toastEl);
+            setTimeout(() => toastEl.remove(), 3000);
         }
 
-        // ==========================================
-        // INIT
-        // ==========================================
         document.addEventListener('DOMContentLoaded', async () => {
+            await api.ensureBaseUrl();
             await checkAuth();
-            loadGames();
-            loadTeams();
-            loadStats();
+            await loadLiveData(true);
+            startAutoRefresh();
+        });
+
+        document.getElementById('gamePropsModal').addEventListener('click', (event) => {
+            if (event.target.id === 'gamePropsModal') {
+                closeGamePropsModal();
+            }
+        });
+
+        document.getElementById('authModal').addEventListener('click', (event) => {
+            if (event.target.id === 'authModal') {
+                hideModal();
+            }
         });
     </script>
 </body>

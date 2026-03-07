@@ -7,9 +7,11 @@ A full-stack web application that scrapes lacrosse statistics, generates betting
 - 🤖 **Autonomous Web Scraping** - Automatically discovers opponent websites and scrapes their stats
 - 🔄 **Scheduled Updates** - Refreshes data every 6 hours (configurable)
 - 📊 **Odds Generation** - Calculates moneyline, spread, and totals using Pythagorean expectation
+- 🎯 **Player Props** - Generates goals, points, shots, saves, and faceoff percentage props for upcoming games
 - 👤 **User Authentication** - Register, login, and save picks across devices
 - 📱 **Responsive Design** - Works on desktop and mobile
 - 🗄️ **PostgreSQL Database** - Persistent storage for all data
+- 🔌 **API-Aware Frontend** - The standalone `public/index.html` auto-connects to a live backend when one is available
 
 ## How the Autonomous Scraper Works
 
@@ -18,8 +20,9 @@ The scraper operates completely autonomously:
 1. **Fetches IIT Schedule** - Gets the current schedule from Illinois Tech Athletics
 2. **Identifies Opponents** - Extracts all opponent team names from the schedule
 3. **Discovers Stats Pages** - For each opponent:
-   - Searches the web (DuckDuckGo) for the team's athletics website
-   - Tries common domain patterns (e.g., `{team}athletics.com`, `athletics.{team}.edu`)
+   - Uses the opponent links published on the IIT schedule page when available
+   - Applies manual overrides from `src/team-url-overrides.json`
+   - Falls back to search + common domain patterns if needed
    - Locates the men's lacrosse statistics page
 4. **Scrapes Stats** - Extracts team and player statistics from each discovered page
 5. **Generates Odds** - Calculates betting lines based on the scraped data
@@ -71,6 +74,7 @@ Railway auto-deploys when you push to GitHub. Your app will be live at:
 ### Games & Odds
 - `GET /api/games` - All games with odds
 - `GET /api/games?upcoming=true` - Upcoming games only
+- `GET /api/props?upcoming=true` - Player props for upcoming games
 - `GET /api/teams` - All teams
 - `GET /api/teams/:id/players` - Players for a team
 
@@ -101,11 +105,14 @@ Railway auto-deploys when you push to GitHub. Your app will be live at:
 ## Data Sources
 
 The scraper **autonomously discovers** opponent websites by:
+- Using opponent links from the IIT schedule whenever they exist
+- Consulting `src/team-url-overrides.json` for hard overrides
 - Searching the web for each team's athletics site
-- Trying common domain patterns
-- Crawling to find lacrosse stats pages
+- Trying common domain patterns and crawling to find lacrosse stats pages
 
 It always starts from the IIT schedule and dynamically finds opponents - no hardcoded URLs required.
+
+If a specific team keeps missing, add a manual entry to `src/team-url-overrides.json`.
 
 ## Scraping Schedule
 

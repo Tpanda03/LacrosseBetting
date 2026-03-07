@@ -193,9 +193,15 @@ const setupDatabase = async () => {
         await client.query(`
             CREATE INDEX IF NOT EXISTS idx_picks_user ON user_picks(user_id);
             CREATE INDEX IF NOT EXISTS idx_picks_game ON user_picks(game_id);
+            CREATE INDEX IF NOT EXISTS idx_prop_picks_user ON user_prop_picks(user_id);
+            CREATE INDEX IF NOT EXISTS idx_prop_picks_prop ON user_prop_picks(prop_id);
             CREATE INDEX IF NOT EXISTS idx_games_date ON games(game_date);
+            CREATE INDEX IF NOT EXISTS idx_games_matchup ON games(home_team_id, away_team_id, game_date);
             CREATE INDEX IF NOT EXISTS idx_players_team ON players(team_id);
+            CREATE INDEX IF NOT EXISTS idx_players_team_name_lower ON players(team_id, LOWER(name));
             CREATE INDEX IF NOT EXISTS idx_odds_game ON odds(game_id);
+            CREATE INDEX IF NOT EXISTS idx_player_props_lookup ON player_props(game_id, player_id, prop_type);
+            CREATE INDEX IF NOT EXISTS idx_teams_name_lower ON teams(LOWER(name));
         `);
         console.log('✅ Indexes created');
 

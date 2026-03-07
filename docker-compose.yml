@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build: .
@@ -8,6 +6,7 @@ services:
     environment:
       - NODE_ENV=production
       - DATABASE_URL=postgresql://laxodds:laxodds123@db:5432/laxodds
+      - DB_SSL=false
       - JWT_SECRET=your-super-secret-jwt-key-change-in-production
       - JWT_EXPIRES_IN=7d
       - SCRAPE_CRON=0 */6 * * *

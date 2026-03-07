@@ -1,52 +1,84 @@
 const pool = require('../config/database');
+const playerRatings = require('./player-ratings');
 
 class OddsEngine {
+    toNumber(value, fallback = 0) {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : fallback;
+    }
+
     /**
      * Calculate win probability using multiple factors
      */
     calculateWinProbability(team1, team2) {
-        const t1GPG = team1.goals_per_game || (team1.goals / team1.games) || 7;
-        const t1GAPG = team1.goals_allowed_per_game || (team1.goals_allowed / team1.games) || 10;
-        const t2GPG = team2.goals_per_game || (team2.goals / team2.games) || 9;
-        const t2GAPG = team2.goals_allowed_per_game || (team2.goals_allowed / team2.games) || 9;
+        const t1Games = this.toNumber(team1.games, 0);
+        const t2Games = this.toNumber(team2.games, 0);
+        const t1GPG = this.toNumber(team1.goals_per_game, t1Games ? this.toNumber(team1.goals) / t1Games : 7);
+        const t1GAPG = this.toNumber(team1.goals_allowed_per_game, t1Games ? this.toNumber(team1.goals_allowed) / t1Games : 10);
+        const t2GPG = this.toNumber(team2.goals_per_game, t2Games ? this.toNumber(team2.goals) / t2Games : 9);
+        const t2GAPG = this.toNumber(team2.goals_allowed_per_game, t2Games ? this.toNumber(team2.goals_allowed) / t2Games : 9);
 
         // Expected goals per team
         const t1Expected = (t1GPG + t2GAPG) / 2;
         const t2Expected = (t2GPG + t1GAPG) / 2;
 
         // Win percentage factor
-        const t1WinPct = team1.wins / (team1.wins + team1.losses) || 0.5;
-        const t2WinPct = team2.wins / (team2.wins + team2.losses) || 0.5;
+        const t1Wins = this.toNumber(team1.wins, 0);
+        const t1Losses = this.toNumber(team1.losses, 0);
+        const t2Wins = this.toNumber(team2.wins, 0);
+        const t2Losses = this.toNumber(team2.losses, 0);
+        const t1WinPct = (t1Wins + t1Losses) > 0 ? t1Wins / (t1Wins + t1Losses) : 0.5;
+        const t2WinPct = (t2Wins + t2Losses) > 0 ? t2Wins / (t2Wins + t2Losses) : 0.5;
 
         // Faceoff advantage
-        const faceoffAdj1 = (parseFloat(team1.faceoff_pct) || 0.5) * 0.15;
-        const faceoffAdj2 = (parseFloat(team2.faceoff_pct) || 0.5) * 0.15;
+        const faceoffAdj1 = this.toNumber(team1.faceoff_pct, 0.5) * 0.15;
+        const faceoffAdj2 = this.toNumber(team2.faceoff_pct, 0.5) * 0.15;
 
         // Combined power score
-        const t1Score = (t1Expected * 0.35) + (t1WinPct * 0.35) + faceoffAdj1 + ((parseFloat(team1.clear_pct) || 0.75) * 0.15);
-        const t2Score = (t2Expected * 0.35) + (t2WinPct * 0.35) + faceoffAdj2 + ((parseFloat(team2.clear_pct) || 0.75) * 0.15);
+        const t1Score = (t1Expected * 0.35) + (t1WinPct * 0.35) + faceoffAdj1 + (this.toNumber(team1.clear_pct, 0.75) * 0.15);
+        const t2Score = (t2Expected * 0.35) + (t2WinPct * 0.35) + faceoffAdj2 + (this.toNumber(team2.clear_pct, 0.75) * 0.15);
 
-        return t1Score / (t1Score + t2Score);
+        const totalScore = t1Score + t2Score;
+        const probability = totalScore > 0 ? t1Score / totalScore : 0.5;
+        return Math.min(0.99, Math.max(0.01, probability));
     }
 
     /**
      * Convert probability to American odds
      */
     probabilityToAmerican(prob) {
+        prob = Math.min(0.99, Math.max(0.01, prob));
         if (prob >= 0.5) {
             return Math.round(-100 * prob / (1 - prob));
         }
         return Math.round(100 * (1 - prob) / prob);
     }
 
+    americanToProbability(odds) {
+        const value = this.toNumber(odds, null);
+        if (value === null || value === 0) {
+            return null;
+        }
+
+        if (value < 0) {
+            return Math.abs(value) / (Math.abs(value) + 100);
+        }
+
+        return 100 / (value + 100);
+    }
+
+    roundToHalf(value) {
+        return Math.round(value * 2) / 2;
+    }
+
     /**
      * Calculate point spread
      */
     calculateSpread(team1, team2) {
-        const t1GPG = team1.goals_per_game || 7;
-        const t2GPG = team2.goals_per_game || 9;
-        const t1GAPG = team1.goals_allowed_per_game || 10;
-        const t2GAPG = team2.goals_allowed_per_game || 9;
+        const t1GPG = this.toNumber(team1.goals_per_game, 7);
+        const t2GPG = this.toNumber(team2.goals_per_game, 9);
+        const t1GAPG = this.toNumber(team1.goals_allowed_per_game, 10);
+        const t2GAPG = this.toNumber(team2.goals_allowed_per_game, 9);
 
         const t1Expected = (t1GPG + t2GAPG) / 2;
         const t2Expected = (t2GPG + t1GAPG) / 2;
@@ -54,14 +86,47 @@ class OddsEngine {
         return (t1Expected - t2Expected).toFixed(1);
     }
 
+    calculateSpreadMagnitudeFromProbability(probability, totalLine) {
+        const favoriteProbability = Math.min(0.99, Math.max(0.5, this.toNumber(probability, 0.5)));
+        const probabilityEdge = Math.abs(favoriteProbability - 0.5);
+        const magnitudeFromProbability = this.roundToHalf(Math.max(0.5, probabilityEdge * 14));
+        const totalCap = totalLine !== null && totalLine !== undefined
+            ? Math.max(1.5, this.roundToHalf(this.toNumber(totalLine, 16) * 0.35))
+            : 6.0;
+
+        return Math.min(totalCap, magnitudeFromProbability);
+    }
+
+    normalizeSpreadFromMoneyline({
+        homeMoneyline,
+        awayMoneyline,
+        totalLine,
+        homeWinProb,
+        rawSpread
+    }) {
+        const homeProbability = this.americanToProbability(homeMoneyline);
+        const awayProbability = this.americanToProbability(awayMoneyline);
+        const fallbackHomeProbability = Math.min(0.99, Math.max(0.01, this.toNumber(homeWinProb, 50) / 100));
+
+        const resolvedHomeProbability = homeProbability ?? fallbackHomeProbability;
+        const resolvedAwayProbability = awayProbability ?? (1 - fallbackHomeProbability);
+        const homeIsFavorite = resolvedHomeProbability >= resolvedAwayProbability;
+        const favoriteProbability = Math.max(resolvedHomeProbability, resolvedAwayProbability);
+        const probabilitySpread = this.calculateSpreadMagnitudeFromProbability(favoriteProbability, totalLine);
+        const rawMagnitude = Math.abs(this.toNumber(rawSpread, probabilitySpread));
+        const spreadMagnitude = this.roundToHalf((probabilitySpread * 0.8) + (Math.min(probabilitySpread, rawMagnitude) * 0.2));
+
+        return homeIsFavorite ? -spreadMagnitude : spreadMagnitude;
+    }
+
     /**
      * Calculate total (over/under) line
      */
     calculateTotal(team1, team2) {
-        const t1GPG = team1.goals_per_game || 7;
-        const t2GPG = team2.goals_per_game || 9;
-        const t1GAPG = team1.goals_allowed_per_game || 10;
-        const t2GAPG = team2.goals_allowed_per_game || 9;
+        const t1GPG = this.toNumber(team1.goals_per_game, 7);
+        const t2GPG = this.toNumber(team2.goals_per_game, 9);
+        const t1GAPG = this.toNumber(team1.goals_allowed_per_game, 10);
+        const t2GAPG = this.toNumber(team2.goals_allowed_per_game, 9);
 
         const expected = ((t1GPG + t2GAPG) / 2) + ((t2GPG + t1GAPG) / 2);
         return (Math.round(expected * 2) / 2).toFixed(1);
@@ -77,13 +142,24 @@ class OddsEngine {
         // Add home field advantage (~3%)
         const adjustedHomeProb = Math.min(0.95, homeWinProb + 0.03);
         const adjustedAwayProb = 1 - adjustedHomeProb;
+        const homeMoneyline = this.probabilityToAmerican(adjustedHomeProb);
+        const awayMoneyline = this.probabilityToAmerican(adjustedAwayProb);
+        const totalLine = parseFloat(this.calculateTotal(homeTeam, awayTeam));
+        const rawSpread = parseFloat(this.calculateSpread(homeTeam, awayTeam));
+        const spreadLine = this.normalizeSpreadFromMoneyline({
+            homeMoneyline,
+            awayMoneyline,
+            totalLine,
+            homeWinProb: adjustedHomeProb * 100,
+            rawSpread
+        });
 
         return {
-            homeMoneyline: this.probabilityToAmerican(adjustedHomeProb),
-            awayMoneyline: this.probabilityToAmerican(adjustedAwayProb),
-            spreadLine: parseFloat(this.calculateSpread(homeTeam, awayTeam)),
+            homeMoneyline,
+            awayMoneyline,
+            spreadLine,
             spreadOdds: -110,
-            totalLine: parseFloat(this.calculateTotal(homeTeam, awayTeam)),
+            totalLine,
             overOdds: -110,
             underOdds: -110,
             homeWinProb: (adjustedHomeProb * 100).toFixed(1),
@@ -96,13 +172,24 @@ class OddsEngine {
      */
     generatePlayerProps(player, gameId) {
         const props = [];
-        const gp = player.games_played || 1;
+        const gp = Math.max(this.toNumber(player.games_played, 0), 1);
+        const goals = this.toNumber(player.goals, 0);
+        const assists = this.toNumber(player.assists, 0);
+        const points = this.toNumber(player.points, 0);
+        const shots = this.toNumber(player.shots, 0);
+        const groundBalls = this.toNumber(player.ground_balls, 0);
+        const turnovers = this.toNumber(player.turnovers, 0);
+        const causedTurnovers = this.toNumber(player.caused_turnovers, 0);
+        const saves = this.toNumber(player.saves, 0);
+        const faceoffPct = this.toNumber(player.faceoff_pct, 0);
+        const playerRating = playerRatings.calculate(player);
+        const ratingAdjustment = Math.max(-0.04, Math.min(0.08, (playerRating - 4) * 0.01));
 
         // Goals prop for attackers/midfielders
-        if (player.goals > 0 || ['A', 'M'].includes(player.position)) {
-            const gpg = player.goals / gp;
+        if (goals > 0 || ['A', 'M'].includes(player.position)) {
+            const gpg = goals / gp;
             const line = Math.max(0.5, Math.round(gpg * 2) / 2);
-            const overProb = gpg > line ? 0.55 : 0.45;
+            const overProb = Math.min(0.62, Math.max(0.38, (gpg > line ? 0.55 : 0.45) + ratingAdjustment));
 
             props.push({
                 playerId: player.id,
@@ -115,10 +202,10 @@ class OddsEngine {
         }
 
         // Points prop
-        if (player.points > 0) {
-            const ppg = player.points / gp;
+        if (points > 0) {
+            const ppg = points / gp;
             const line = Math.max(0.5, Math.round(ppg * 2) / 2);
-            const overProb = ppg > line ? 0.55 : 0.45;
+            const overProb = Math.min(0.62, Math.max(0.38, (ppg > line ? 0.55 : 0.45) + ratingAdjustment));
 
             props.push({
                 playerId: player.id,
@@ -130,9 +217,24 @@ class OddsEngine {
             });
         }
 
+        if (assists > 0) {
+            const apg = assists / gp;
+            const line = Math.max(0.5, Math.round(apg * 2) / 2);
+            const overProb = Math.min(0.6, Math.max(0.4, (apg > line ? 0.54 : 0.46) + (ratingAdjustment * 0.8)));
+
+            props.push({
+                playerId: player.id,
+                gameId: gameId,
+                propType: 'Assists',
+                line,
+                overOdds: this.probabilityToAmerican(overProb),
+                underOdds: this.probabilityToAmerican(1 - overProb)
+            });
+        }
+
         // Shots prop
-        if (player.shots > 2) {
-            const spg = player.shots / gp;
+        if (shots > 2) {
+            const spg = shots / gp;
             const line = Math.max(1.5, Math.round(spg));
 
             props.push({
@@ -145,9 +247,37 @@ class OddsEngine {
             });
         }
 
+        if (groundBalls > 0) {
+            const gbpg = groundBalls / gp;
+            const line = Math.max(0.5, this.roundToHalf(gbpg));
+
+            props.push({
+                playerId: player.id,
+                gameId: gameId,
+                propType: 'Ground Balls',
+                line,
+                overOdds: -110,
+                underOdds: -110
+            });
+        }
+
+        if (causedTurnovers > 0) {
+            const ctpg = causedTurnovers / gp;
+            const line = Math.max(0.5, this.roundToHalf(ctpg));
+
+            props.push({
+                playerId: player.id,
+                gameId: gameId,
+                propType: 'Caused Turnovers',
+                line,
+                overOdds: -105,
+                underOdds: -115
+            });
+        }
+
         // Saves prop for goalies
-        if (player.saves > 0) {
-            const spg = player.saves / gp;
+        if (saves > 0) {
+            const spg = saves / gp;
             const line = Math.max(8.5, Math.round(spg));
 
             props.push({
@@ -160,7 +290,117 @@ class OddsEngine {
             });
         }
 
+        if (turnovers > 0 && ['A', 'M'].includes(player.position)) {
+            const topg = turnovers / gp;
+            const line = Math.max(0.5, this.roundToHalf(topg));
+
+            props.push({
+                playerId: player.id,
+                gameId: gameId,
+                propType: 'Turnovers',
+                line,
+                overOdds: -118,
+                underOdds: -102
+            });
+        }
+
+        // Faceoff percentage prop for specialists
+        if (faceoffPct > 0) {
+            const pctLine = Math.round(faceoffPct * 200) / 2;
+
+            props.push({
+                playerId: player.id,
+                gameId: gameId,
+                propType: 'Faceoff %',
+                line: pctLine,
+                overOdds: -110,
+                underOdds: -110
+            });
+        }
+
         return props;
+    }
+
+    async upsertOdds(client, gameId, odds) {
+        const existing = await client.query(
+            'SELECT id FROM odds WHERE game_id = $1 ORDER BY generated_at DESC NULLS LAST, id DESC LIMIT 1',
+            [gameId]
+        );
+
+        if (existing.rows.length > 0) {
+            await client.query(`
+                UPDATE odds
+                SET home_moneyline = $1,
+                    away_moneyline = $2,
+                    spread_line = $3,
+                    spread_odds = $4,
+                    total_line = $5,
+                    over_odds = $6,
+                    under_odds = $7,
+                    home_win_prob = $8,
+                    away_win_prob = $9,
+                    generated_at = NOW()
+                WHERE id = $10
+            `, [
+                odds.homeMoneyline,
+                odds.awayMoneyline,
+                odds.spreadLine,
+                odds.spreadOdds,
+                odds.totalLine,
+                odds.overOdds,
+                odds.underOdds,
+                odds.homeWinProb,
+                odds.awayWinProb,
+                existing.rows[0].id
+            ]);
+            return;
+        }
+
+        await client.query(`
+            INSERT INTO odds (
+                game_id, home_moneyline, away_moneyline, spread_line, spread_odds,
+                total_line, over_odds, under_odds, home_win_prob, away_win_prob
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        `, [
+            gameId,
+            odds.homeMoneyline,
+            odds.awayMoneyline,
+            odds.spreadLine,
+            odds.spreadOdds,
+            odds.totalLine,
+            odds.overOdds,
+            odds.underOdds,
+            odds.homeWinProb,
+            odds.awayWinProb
+        ]);
+    }
+
+    async upsertPlayerProp(client, prop) {
+        const existing = await client.query(`
+            SELECT id
+            FROM player_props
+            WHERE game_id = $1 AND player_id = $2 AND prop_type = $3
+            ORDER BY generated_at DESC NULLS LAST, id DESC
+            LIMIT 1
+        `, [prop.gameId, prop.playerId, prop.propType]);
+
+        if (existing.rows.length > 0) {
+            await client.query(`
+                UPDATE player_props
+                SET line = $1,
+                    over_odds = $2,
+                    under_odds = $3,
+                    generated_at = NOW()
+                WHERE id = $4
+            `, [prop.line, prop.overOdds, prop.underOdds, existing.rows[0].id]);
+            return;
+        }
+
+        await client.query(`
+            INSERT INTO player_props (game_id, player_id, prop_type, line, over_odds, under_odds)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        `, [prop.gameId, prop.playerId, prop.propType, prop.line, prop.overOdds, prop.underOdds]);
     }
 
     /**
@@ -208,24 +448,7 @@ class OddsEngine {
 
                 const odds = this.generateGameOdds(homeTeam, awayTeam);
 
-                // Upsert odds
-                await client.query(`
-                    INSERT INTO odds (game_id, home_moneyline, away_moneyline, spread_line, spread_odds,
-                                     total_line, over_odds, under_odds, home_win_prob, away_win_prob)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-                    ON CONFLICT (game_id) DO UPDATE SET
-                        home_moneyline = EXCLUDED.home_moneyline,
-                        away_moneyline = EXCLUDED.away_moneyline,
-                        spread_line = EXCLUDED.spread_line,
-                        total_line = EXCLUDED.total_line,
-                        home_win_prob = EXCLUDED.home_win_prob,
-                        away_win_prob = EXCLUDED.away_win_prob,
-                        generated_at = NOW()
-                `, [
-                    game.id, odds.homeMoneyline, odds.awayMoneyline, odds.spreadLine,
-                    odds.spreadOdds, odds.totalLine, odds.overOdds, odds.underOdds,
-                    odds.homeWinProb, odds.awayWinProb
-                ]);
+                await this.upsertOdds(client, game.id, odds);
 
                 generated++;
             }
@@ -233,6 +456,51 @@ class OddsEngine {
             console.log(`📊 Generated odds for ${generated} games`);
             return generated;
 
+        } finally {
+            client.release();
+        }
+    }
+
+    /**
+     * Generate and store player props for all upcoming games.
+     */
+    async generateAllPlayerProps() {
+        const client = await pool.connect();
+
+        try {
+            const gamesResult = await client.query(`
+                SELECT id, home_team_id, away_team_id
+                FROM games
+                WHERE is_completed = false AND game_date >= CURRENT_DATE
+            `);
+
+            let generated = 0;
+
+            for (const game of gamesResult.rows) {
+                const teamIds = [game.home_team_id, game.away_team_id].filter(Boolean);
+                if (teamIds.length === 0) {
+                    continue;
+                }
+
+                const playersResult = await client.query(`
+                    SELECT id, position, games_played, goals, assists, points, shots, shot_pct,
+                           ground_balls, turnovers, caused_turnovers, saves, faceoff_pct
+                    FROM players
+                    WHERE team_id = ANY($1::int[])
+                    ORDER BY points DESC, goals DESC, saves DESC, name ASC
+                `, [teamIds]);
+
+                for (const player of playersResult.rows) {
+                    const props = this.generatePlayerProps(player, game.id);
+                    for (const prop of props) {
+                        await this.upsertPlayerProp(client, prop);
+                        generated++;
+                    }
+                }
+            }
+
+            console.log(`🎯 Generated ${generated} player props`);
+            return generated;
         } finally {
             client.release();
         }
