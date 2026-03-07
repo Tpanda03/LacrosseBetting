@@ -56,6 +56,9 @@ In Railway dashboard → your service → **Variables** tab, add:
 | `ADMIN_PASSWORD` | `your-secure-password` | ✅ Yes |
 | `SCRAPE_ON_START` | `true` | Optional |
 | `SCRAPE_CRON` | `0 */6 * * *` | Optional (every 6 hrs) |
+| `POSTGAME_SCRAPE_DELAY_HOURS` | `3` | Optional |
+| `POSTGAME_SCRAPE_POLL_CRON` | `*/15 * * * *` | Optional |
+| `GAME_TIMEZONE` | `America/Chicago` | Optional |
 
 ### Step 5: Deploy!
 Railway auto-deploys when you push to GitHub. Your app will be live at:
@@ -99,6 +102,10 @@ Railway auto-deploys when you push to GitHub. Your app will be live at:
 | `JWT_EXPIRES_IN` | Token expiration | 7d |
 | `SCRAPE_CRON` | Scrape schedule (cron format) | `0 */6 * * *` |
 | `SCRAPE_ON_START` | Run scrape on server start | false |
+| `POSTGAME_SCRAPE_DELAY_HOURS` | Hours after scheduled start to run a postgame scrape | `3` |
+| `POSTGAME_SCRAPE_POLL_CRON` | Cron for the postgame watcher | `*/15 * * * *` |
+| `POSTGAME_LOOKBACK_DAYS` | How many recent days of scheduled games to evaluate | `2` |
+| `GAME_TIMEZONE` | Time zone used to interpret scheduled game times | `America/Chicago` |
 | `ADMIN_EMAIL` | Admin account email | admin@laxodds.com |
 | `ADMIN_PASSWORD` | Admin account password | changeme123 |
 
@@ -121,6 +128,8 @@ By default, the scraper runs every 6 hours. Customize with `SCRAPE_CRON`:
 - `0 */3 * * *` - Every 3 hours
 - `0 8,20 * * *` - At 8 AM and 8 PM
 - `0 0 * * *` - Daily at midnight
+
+The app also includes a postgame watcher. By default it checks every 15 minutes and, for recent unsolved games, runs a scrape 3 hours after the scheduled start time in `America/Chicago`. Example: a `2:00 PM` game becomes eligible for a postgame scrape at `5:00 PM`.
 
 ## Security Notes
 
